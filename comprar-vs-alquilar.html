@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprar o alquilar vivienda: calculadora comparativa | Calcuyo</title>
+<meta name="description" content="¿Te conviene comprar o alquilar tu vivienda? Compara el patrimonio final de cada opción teniendo en cuenta la hipoteca, la revalorización y la inversión del ahorro.">
+<link rel="canonical" href="https://calcuyo.com/comprar-vs-alquilar.html">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <span class="logo">€</span>
+        <span class="name">Calcuyo</span>
+      </a>
+      <nav class="topnav">
+        <a href="index.html">Inicio</a>
+        <a href="interes-compuesto.html">Interés compuesto</a>
+        <a href="rentabilidad-inmobiliaria.html">Inmobiliaria</a>
+        <a href="hipoteca.html">Hipoteca</a>
+        <a href="ahorro.html">Ahorro</a>
+        <a href="comprar-vs-alquilar.html" class="active">Comprar o alquilar</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <h1>Comprar o alquilar vivienda</h1>
+      <p>Compara cuánto patrimonio tendrías al cabo de unos años comprando frente a alquilar e invertir tu ahorro. Una decisión que depende de muchos factores: aquí los pones todos sobre la mesa.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- Formulario -->
+      <div class="card">
+        <h2><span class="dot"></span>Opción de compra</h2>
+
+        <div class="field">
+          <label>Precio de la vivienda</label>
+          <div class="input-wrap">
+            <input type="number" id="cr_price" class="has-suffix" value="250000" min="0" step="1000">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Gastos de compra (ITP/IVA, notaría…)</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_buyCosts" class="has-suffix" value="12" min="0" step="0.5">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Entrada (capital propio)</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_down" class="has-suffix" value="50000" min="0" step="1000">
+              <span class="suffix">€</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Tipo de interés hipoteca</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_loanRate" class="has-suffix" value="3" min="0" step="0.1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Plazo hipoteca</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_loanYears" class="has-suffix" value="30" min="1" max="40" step="1">
+              <span class="suffix">años</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Revalorización anual vivienda</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_appreciation" class="has-suffix" value="2" step="0.1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Gastos anuales (IBI, comunidad…)</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_ownCosts" class="has-suffix" value="2000" min="0" step="100">
+              <span class="suffix">€</span>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:18px"><span class="dot"></span>Opción de alquiler</h2>
+        <div class="row">
+          <div class="field">
+            <label>Alquiler mensual</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_rent" class="has-suffix" value="1000" min="0" step="25">
+              <span class="suffix">€</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Subida anual del alquiler</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_rentInc" class="has-suffix" value="2" step="0.1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:18px"><span class="dot"></span>Supuestos generales</h2>
+        <div class="row">
+          <div class="field">
+            <label>Rentabilidad de tus inversiones</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_invRate" class="has-suffix" value="5" min="0" step="0.1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Horizonte de comparación</label>
+            <div class="input-wrap">
+              <input type="number" id="cr_years" class="has-suffix" value="15" min="1" max="50" step="1">
+              <span class="suffix">años</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div class="card">
+        <h2><span class="dot"></span>Resultados</h2>
+        <div class="results">
+          <div class="result-box positive">
+            <div class="lbl">Patrimonio final comprando</div>
+            <div class="val" id="cr_buyWorth">—</div>
+          </div>
+          <div class="result-box positive">
+            <div class="lbl">Patrimonio final alquilando</div>
+            <div class="val" id="cr_rentWorth">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Valor de la vivienda al final</div>
+            <div class="val" id="cr_homeValue">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Punto de equilibrio</div>
+            <div class="val" id="cr_breakeven">—</div>
+          </div>
+        </div>
+        <div class="result-box" id="cr_verdictBox" style="margin-bottom:18px">
+          <div class="lbl">Conclusión (en este escenario)</div>
+          <div class="val" id="cr_verdict" style="font-size:1.05rem">—</div>
+        </div>
+        <div class="chart-box"><canvas id="rentBuyChart"></canvas></div>
+        <p class="note">El gráfico compara la evolución de tu patrimonio neto en cada opción. "Comprar" incluye el valor de la vivienda menos la hipoteca pendiente; "Alquilar" incluye el ahorro invertido (entrada, gastos y la diferencia mensual).</p>
+      </div>
+
+    </div>
+
+    <!-- ===== Sección explicativa / SEO ===== -->
+    <div class="content">
+
+      <div class="card">
+        <h2>¿Cómo funciona esta calculadora?</h2>
+        <p>
+          La pregunta de si conviene <strong>comprar o alquilar</strong> no tiene una respuesta única:
+          depende del precio, de los tipos de interés, de cuánto suba la vivienda, del alquiler de tu
+          zona y de qué rentabilidad obtengas si inviertes tu ahorro. Esta herramienta los pone todos
+          juntos y calcula qué <strong>patrimonio neto</strong> tendrías con cada opción al cabo de los años.
+        </p>
+        <p>La clave de una comparación justa es el <strong>coste de oportunidad</strong>:</p>
+        <ul>
+          <li>Si <strong>compras</strong>, tu patrimonio al final es el valor de la vivienda menos la hipoteca que te quede por pagar.</li>
+          <li>Si <strong>alquilas</strong>, inviertes el dinero que no inmovilizas (la entrada, los gastos de compra y, cada mes, la diferencia entre la cuota y el alquiler). Tu patrimonio es ese ahorro invertido y revalorizado.</li>
+        </ul>
+        <p>
+          Ambas opciones "gastan" lo mismo cada mes en la comparación: la que sale más barata invierte la diferencia.
+          Así el resultado refleja de verdad qué te deja en mejor posición financiera.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Conceptos clave</h2>
+        <h3>Patrimonio neto</h3>
+        <p>El total de lo que tendrías al final del periodo en cada escenario: en compra, la vivienda menos la deuda; en alquiler, tus inversiones acumuladas.</p>
+        <h3>Coste de oportunidad</h3>
+        <p>El rendimiento que dejarías de ganar al inmovilizar tu dinero en una vivienda en lugar de invertirlo. Es lo que hace que alquilar e invertir pueda ser competitivo según los supuestos.</p>
+        <h3>Punto de equilibrio</h3>
+        <p>El año a partir del cual comprar empieza a salir más a cuenta que alquilar (o viceversa). Antes de ese punto, los gastos iniciales de la compra pesan más.</p>
+        <h3>Revalorización</h3>
+        <p>Cuánto sube de precio la vivienda cada año. Es uno de los factores más influyentes y más inciertos del cálculo.</p>
+      </div>
+
+      <div class="card faq">
+        <h2>Preguntas frecuentes</h2>
+        <details>
+          <summary>¿Por qué alquilar puede salir mejor que comprar?</summary>
+          <p>Porque el dinero de la entrada y los gastos de compra, si se invierte con una buena rentabilidad, puede crecer más que la revalorización de la vivienda. El resultado depende mucho de los supuestos que introduzcas.</p>
+        </details>
+        <details>
+          <summary>¿Qué rentabilidad de inversión debería poner?</summary>
+          <p>La que esperes obtener con tu ahorro invertido. Como referencia histórica orientativa, una cartera diversificada a largo plazo ha rondado el 4-7 % anual, con variabilidad y sin garantías.</p>
+        </details>
+        <details>
+          <summary>¿Incluye impuestos e inflación?</summary>
+          <p>Es un modelo simplificado y orientativo. No descuenta IRPF de las inversiones, ni IBI por separado más allá del campo de gastos, ni ajusta por inflación. Sirve para comparar escenarios, no como cálculo fiscal exacto.</p>
+        </details>
+        <details>
+          <summary>¿Tiene en cuenta factores no económicos?</summary>
+          <p>No. La decisión de comprar o alquilar también depende de estabilidad, movilidad, gustos o tranquilidad, que no se reflejan en números. Usa el resultado como una pieza más, no como la única.</p>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p class="disclaimer">
+      Herramienta orientativa con fines informativos. Es un modelo simplificado basado en los supuestos
+      que introduces; los resultados son muy sensibles a la revalorización de la vivienda y a la
+      rentabilidad de las inversiones, ambas inciertas. No considera impuestos ni inflación de forma
+      detallada y no constituye asesoramiento financiero.
+    </p>
+    <p>© 2026 · Calcuyo · Calculadoras financieras</p>
+  </footer>
+
+<script src="assets/utils.js"></script>
+<script>
+/* ===== Lógica comprar vs. alquilar ===== */
+let rentBuyChart;
+
+function monthlyPayment(loan, annualRate, years) {
+  if (loan <= 0 || years <= 0) return 0;
+  const i = annualRate / 100 / 12, n = years * 12;
+  if (i === 0) return loan / n;
+  return loan * i / (1 - Math.pow(1 + i, -n));
+}
+
+// Saldo pendiente de la hipoteca tras "yearsElapsed" años
+function remainingBalance(loan, annualRate, totalYears, yearsElapsed) {
+  if (loan <= 0 || totalYears <= 0) return 0;
+  const i = annualRate / 100 / 12;
+  const k = Math.min(yearsElapsed, totalYears) * 12;
+  const pmt = monthlyPayment(loan, annualRate, totalYears);
+  if (i === 0) return Math.max(0, loan - pmt * k);
+  return Math.max(0, loan * Math.pow(1 + i, k) - pmt * ((Math.pow(1 + i, k) - 1) / i));
+}
+
+function calcRentBuy() {
+  const price     = num('cr_price');
+  const buyCosts  = price * num('cr_buyCosts') / 100;
+  const down      = num('cr_down');
+  const loanRate  = num('cr_loanRate');
+  const loanYears = Math.max(1, Math.round(num('cr_loanYears')));
+  const apprec    = num('cr_appreciation') / 100;
+  const ownCosts  = num('cr_ownCosts');
+  const rent0     = num('cr_rent');
+  const rentInc   = num('cr_rentInc') / 100;
+  const invRate   = num('cr_invRate') / 100;
+  const years     = Math.max(1, Math.round(num('cr_years')));
+
+  const loan = Math.max(0, price - down);
+  const payment = monthlyPayment(loan, loanRate, loanYears);
+  const propMonthly = ownCosts / 12;
+  const im = invRate / 12;               // rentabilidad mensual de las inversiones
+
+  // Cuentas de inversión: el comprador parte de 0; el inquilino invierte lo que el
+  // comprador inmoviliza al inicio (entrada + gastos de compra).
+  let buyInvest = 0;
+  let rentInvest = down + buyCosts;
+
+  const labels = ['Año 0'];
+  const buyData = [down + buyCosts - buyCosts /* equity inicial ~ entrada */];
+  // Patrimonio inicial: comprar = entrada aportada (la vivienda vale el precio pero debes el préstamo;
+  // neto ≈ entrada menos gastos ya gastados). Alquilar = capital invertido inicial.
+  buyData[0] = down;                      // equity inicial aproximado
+  const rentData = [rentInvest];
+
+  let breakeven = null;
+  const N = years * 12;
+
+  for (let m = 1; m <= N; m++) {
+    const yIdx = Math.floor((m - 1) / 12);
+    const curRent = rent0 * Math.pow(1 + rentInc, yIdx);
+    const mortgagePay = (m <= loanYears * 12) ? payment : 0;
+
+    const buyerCost  = mortgagePay + propMonthly;
+    const renterCost = curRent;
+    const maxCost = Math.max(buyerCost, renterCost);
+
+    // Cada uno invierte la diferencia respecto al coste mayor (gastan lo mismo)
+    buyInvest  = buyInvest  * (1 + im) + (maxCost - buyerCost);
+    rentInvest = rentInvest * (1 + im) + (maxCost - renterCost);
+
+    if (m % 12 === 0 || m === N) {
+      const y = Math.ceil(m / 12);
+      const homeVal = price * Math.pow(1 + apprec, y);
+      const debt = remainingBalance(loan, loanRate, loanYears, y);
+      const buyWorth = (homeVal - debt) + buyInvest;
+      const rentWorth = rentInvest;
+
+      labels.push('Año ' + y);
+      buyData.push(buyWorth);
+      rentData.push(rentWorth);
+
+      if (breakeven === null && buyWorth >= rentWorth) breakeven = y;
+    }
+  }
+
+  // Valores finales
+  const homeValueEnd = price * Math.pow(1 + apprec, years);
+  const debtEnd = remainingBalance(loan, loanRate, loanYears, years);
+  const buyWorthEnd = (homeValueEnd - debtEnd) + buyInvest;
+  const rentWorthEnd = rentInvest;
+  const diff = buyWorthEnd - rentWorthEnd;
+
+  // Volcado
+  document.getElementById('cr_buyWorth').textContent  = euro(buyWorthEnd);
+  document.getElementById('cr_rentWorth').textContent = euro(rentWorthEnd);
+  document.getElementById('cr_homeValue').textContent = euro(homeValueEnd);
+  document.getElementById('cr_breakeven').textContent = breakeven ? ('Año ' + breakeven) : 'No en el plazo';
+
+  const verdictEl = document.getElementById('cr_verdict');
+  const box = document.getElementById('cr_verdictBox');
+  if (Math.abs(diff) < buyWorthEnd * 0.02) {
+    verdictEl.textContent = 'Prácticamente empate entre comprar y alquilar.';
+    box.className = 'result-box';
+  } else if (diff > 0) {
+    verdictEl.textContent = 'Comprar te deja ' + euro(diff) + ' más de patrimonio.';
+    box.className = 'result-box positive';
+  } else {
+    verdictEl.textContent = 'Alquilar e invertir te deja ' + euro(-diff) + ' más de patrimonio.';
+    box.className = 'result-box positive';
+  }
+
+  // Gráfico
+  const datasets = [
+    { label: 'Comprar', data: buyData, borderColor: '#15803d',
+      backgroundColor: 'rgba(21,128,61,0.12)', fill: true, tension: 0.2, pointRadius: 0, borderWidth: 2.5 },
+    { label: 'Alquilar e invertir', data: rentData, borderColor: '#1e3a5f',
+      backgroundColor: 'transparent', fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2.5 }
+  ];
+
+  if (rentBuyChart) {
+    rentBuyChart.data.labels = labels;
+    rentBuyChart.data.datasets = datasets;
+    rentBuyChart.update();
+  } else {
+    rentBuyChart = new Chart(document.getElementById('rentBuyChart'), {
+      type: 'line', data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { usePointStyle: true } }, tooltip: tooltipEuro },
+        scales: { y: { beginAtZero: true, ...axisEuro }, x: { grid: { display: false } } }
+      }
+    });
+  }
+}
+
+['cr_price','cr_buyCosts','cr_down','cr_loanRate','cr_loanYears','cr_appreciation','cr_ownCosts',
+ 'cr_rent','cr_rentInc','cr_invRate','cr_years'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcRentBuy));
+calcRentBuy();
+</script>
+</body>
+</html>
