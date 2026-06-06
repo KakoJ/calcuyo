@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de hipoteca: cuota mensual | Calcuyo</title>
+<meta name="description" content="Calcula la cuota mensual de tu hipoteca, los intereses totales y la tabla de amortización año a año. Sistema francés, gratis y al instante.">
+<link rel="canonical" href="https://calcuyo.com/hipoteca.html">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <span class="logo">€</span>
+        <span class="name">Calculadoras</span>
+      </a>
+      <nav class="topnav">
+        <a href="index.html">Inicio</a>
+        <a href="interes-compuesto.html">Interés compuesto</a>
+        <a href="rentabilidad-inmobiliaria.html">Inmobiliaria</a>
+        <a href="hipoteca.html" class="active">Hipoteca</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <h1>Calculadora de hipoteca</h1>
+      <p>Calcula la cuota mensual, los intereses totales que pagarás y cómo evoluciona tu deuda año a año.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- Formulario -->
+      <div class="card">
+        <h2><span class="dot"></span>Datos del préstamo</h2>
+
+        <div class="field">
+          <label>Importe del préstamo</label>
+          <div class="input-wrap">
+            <input type="number" id="h_amount" class="has-suffix" value="180000" min="0" step="1000">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Tipo de interés anual (TIN)</label>
+            <div class="input-wrap">
+              <input type="number" id="h_rate" class="has-suffix" value="3" min="0" step="0.05">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Plazo</label>
+            <div class="input-wrap">
+              <input type="number" id="h_years" class="has-suffix" value="25" min="1" max="40" step="1">
+              <span class="suffix">años</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div class="card">
+        <h2><span class="dot"></span>Resultados</h2>
+        <div class="results">
+          <div class="result-box positive">
+            <div class="lbl">Cuota mensual</div>
+            <div class="val" id="h_payment">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Nº de cuotas</div>
+            <div class="val" id="h_npay">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Total a pagar</div>
+            <div class="val" id="h_total">—</div>
+          </div>
+          <div class="result-box negative">
+            <div class="lbl">Intereses totales</div>
+            <div class="val" id="h_interest">—</div>
+          </div>
+        </div>
+        <div class="chart-box"><canvas id="mortgageChart"></canvas></div>
+        <p class="note">El gráfico muestra cómo, año a año, baja la deuda pendiente (capital) mientras pagas. Cálculo por sistema francés (cuota constante).</p>
+      </div>
+
+    </div>
+
+    <!-- Tabla de amortización -->
+    <div class="card" style="margin-bottom:24px">
+      <h2><span class="dot"></span>Tabla de amortización (resumen anual)</h2>
+      <div class="table-wrap">
+        <table class="data" id="amortTable">
+          <thead>
+            <tr>
+              <th>Año</th>
+              <th>Cuota anual</th>
+              <th>Intereses</th>
+              <th>Capital amortizado</th>
+              <th>Deuda pendiente</th>
+            </tr>
+          </thead>
+          <tbody><!-- generado por JS --></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== Sección explicativa / SEO ===== -->
+    <div class="content">
+
+      <div class="card">
+        <h2>¿Cómo funciona esta calculadora?</h2>
+        <p>
+          Esta herramienta calcula la <strong>cuota mensual</strong> de una hipoteca a tipo fijo
+          usando el <strong>sistema de amortización francés</strong>, que es el más habitual en España.
+          En este sistema pagas siempre la misma cuota cada mes, pero su composición cambia:
+          al principio pagas sobre todo <strong>intereses</strong> y poco capital, y con el tiempo
+          la proporción se invierte.
+        </p>
+        <p>Solo necesitas introducir tres datos:</p>
+        <ul>
+          <li><strong>Importe del préstamo:</strong> el dinero que te presta el banco (no el precio de la vivienda; resta tu entrada).</li>
+          <li><strong>Tipo de interés anual (TIN):</strong> el interés nominal que aplica el banco.</li>
+          <li><strong>Plazo:</strong> los años durante los que devolverás el préstamo.</li>
+        </ul>
+        <p>
+          Con eso obtienes la cuota mensual, el total de intereses que pagarás a lo largo de la vida
+          del préstamo y una tabla que muestra cómo baja tu deuda año a año.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Conceptos clave</h2>
+
+        <h3>Cuota mensual</h3>
+        <p>Lo que pagas cada mes al banco. Incluye una parte de intereses y otra de devolución del capital prestado.</p>
+
+        <h3>TIN (Tipo de Interés Nominal)</h3>
+        <p>El porcentaje de interés que aplica el banco al préstamo. Es el dato que se usa para calcular la cuota, pero no incluye comisiones ni gastos asociados.</p>
+
+        <h3>TAE (Tasa Anual Equivalente)</h3>
+        <p>Refleja el coste real del préstamo incluyendo comisiones y algunos gastos. Es útil para comparar ofertas entre bancos, pero esta calculadora trabaja con el TIN para estimar la cuota.</p>
+
+        <h3>Amortización</h3>
+        <p>Es la parte de cada cuota que reduce la deuda. Cuanto más avanzas en el préstamo, mayor proporción de tu cuota va a amortizar capital y menos a intereses.</p>
+
+        <h3>Intereses totales</h3>
+        <p>La suma de todos los intereses que pagarás durante la vida del préstamo. Cuanto más largo es el plazo, menor es la cuota mensual pero mayores son los intereses totales.</p>
+      </div>
+
+      <div class="card faq">
+        <h2>Preguntas frecuentes</h2>
+
+        <details>
+          <summary>¿Esta calculadora sirve para hipotecas a tipo variable?</summary>
+          <p>Está pensada para tipo fijo. En una hipoteca variable (ligada al euríbor) la cuota cambia en cada revisión, así que el resultado sería solo una aproximación con el tipo actual.</p>
+        </details>
+
+        <details>
+          <summary>¿Incluye los gastos de constitución de la hipoteca?</summary>
+          <p>No. El cálculo es solo del préstamo (cuota e intereses). No incluye tasación, notaría, gestoría, ni los impuestos de la compraventa. Esos gastos van aparte.</p>
+        </details>
+
+        <details>
+          <summary>¿Por qué al principio pago casi solo intereses?</summary>
+          <p>Porque los intereses se calculan sobre la deuda pendiente, que al inicio es máxima. A medida que amortizas capital, la deuda baja y los intereses de cada cuota también.</p>
+        </details>
+
+        <details>
+          <summary>¿Conviene un plazo más corto o más largo?</summary>
+          <p>Un plazo más corto sube la cuota mensual pero reduce mucho los intereses totales. Uno más largo hace la cuota más asequible pero encarece el préstamo en total. Depende de tu capacidad de pago.</p>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p class="disclaimer">
+      Herramienta orientativa con fines informativos. La cuota real puede variar según las condiciones
+      del banco, el tipo de interés aplicado, las comisiones y los seguros vinculados. No constituye
+      una oferta ni asesoramiento financiero. Consulta siempre las condiciones con tu entidad.
+    </p>
+    <p>© 2026 · Calcuyo · Calculadoras financieras</p>
+  </footer>
+
+<script src="assets/utils.js"></script>
+<script>
+/* ===== Lógica de la hipoteca (sistema francés) ===== */
+let mortgageChart;
+
+function calcMortgage() {
+  const principal = num('h_amount');
+  const annualRate = num('h_rate') / 100;
+  const years = Math.max(1, Math.round(num('h_years')));
+  const n = years * 12;                 // número total de cuotas
+  const i = annualRate / 12;            // tipo mensual
+
+  // Cuota mensual (sistema francés)
+  let payment;
+  if (i === 0) payment = principal / n;
+  else payment = principal * i / (1 - Math.pow(1 + i, -n));
+
+  const totalPaid = payment * n;
+  const totalInterest = totalPaid - principal;
+
+  // Volcado de resultados
+  document.getElementById('h_payment').textContent  = euro2(payment);
+  document.getElementById('h_npay').textContent     = n + ' cuotas';
+  document.getElementById('h_total').textContent    = euro(totalPaid);
+  document.getElementById('h_interest').textContent = euro(totalInterest);
+
+  // Recorrido mes a mes para la tabla anual y el gráfico
+  const labels = ['Año 0'];
+  const balanceData = [principal];
+  const tbody = document.querySelector('#amortTable tbody');
+  tbody.innerHTML = '';
+
+  let balance = principal;
+  let yearInterest = 0, yearPrincipal = 0;
+
+  for (let m = 1; m <= n; m++) {
+    const interestMonth = balance * i;
+    const principalMonth = payment - interestMonth;
+    balance -= principalMonth;
+    yearInterest += interestMonth;
+    yearPrincipal += principalMonth;
+
+    // Al cerrar cada año (cada 12 meses) volcamos fila + punto del gráfico
+    if (m % 12 === 0 || m === n) {
+      const year = Math.ceil(m / 12);
+      const safeBalance = Math.max(0, balance);
+      labels.push('Año ' + year);
+      balanceData.push(safeBalance);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${year}</td>
+        <td>${euro(yearInterest + yearPrincipal)}</td>
+        <td>${euro(yearInterest)}</td>
+        <td>${euro(yearPrincipal)}</td>
+        <td>${euro(safeBalance)}</td>`;
+      tbody.appendChild(tr);
+
+      yearInterest = 0; yearPrincipal = 0;
+    }
+  }
+
+  // Gráfico: evolución de la deuda pendiente
+  const datasets = [{
+    label: 'Deuda pendiente',
+    data: balanceData,
+    borderColor: '#1e3a5f',
+    backgroundColor: 'rgba(30,58,95,0.12)',
+    fill: true, tension: 0.2, pointRadius: 0, borderWidth: 2.5
+  }];
+
+  if (mortgageChart) {
+    mortgageChart.data.labels = labels;
+    mortgageChart.data.datasets = datasets;
+    mortgageChart.update();
+  } else {
+    mortgageChart = new Chart(document.getElementById('mortgageChart'), {
+      type: 'line', data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { usePointStyle: true } }, tooltip: tooltipEuro },
+        scales: { y: { beginAtZero: true, ...axisEuro }, x: { grid: { display: false } } }
+      }
+    });
+  }
+}
+
+['h_amount','h_rate','h_years'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcMortgage));
+calcMortgage();
+</script>
+</body>
+</html>
