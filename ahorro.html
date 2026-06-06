@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de ahorro: cuánto ahorrar al mes | Calcuyo</title>
+<meta name="description" content="Calcula cuánto necesitas ahorrar cada mes para alcanzar tu objetivo de dinero o tu jubilación. Indica la meta, el plazo y la rentabilidad. Gratis y al instante.">
+<link rel="canonical" href="https://calcuyo.com/ahorro.html">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <span class="logo">€</span>
+        <span class="name">Calculadoras</span>
+      </a>
+      <nav class="topnav">
+        <a href="index.html">Inicio</a>
+        <a href="interes-compuesto.html">Interés compuesto</a>
+        <a href="rentabilidad-inmobiliaria.html">Inmobiliaria</a>
+        <a href="hipoteca.html">Hipoteca</a>
+        <a href="ahorro.html" class="active">Ahorro</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <h1>Calculadora de ahorro y jubilación</h1>
+      <p>Descubre cuánto necesitas ahorrar cada mes para alcanzar tu objetivo, teniendo en cuenta la rentabilidad de tus inversiones.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- Formulario -->
+      <div class="card">
+        <h2><span class="dot"></span>Tu objetivo</h2>
+
+        <div class="field">
+          <label>Cantidad que quieres conseguir</label>
+          <div class="input-wrap">
+            <input type="number" id="s_goal" class="has-suffix" value="300000" min="0" step="1000">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Ahorro inicial (lo que ya tienes)</label>
+          <div class="input-wrap">
+            <input type="number" id="s_initial" class="has-suffix" value="10000" min="0" step="500">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Plazo</label>
+            <div class="input-wrap">
+              <input type="number" id="s_years" class="has-suffix" value="25" min="1" max="60" step="1">
+              <span class="suffix">años</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Rentabilidad anual esperada</label>
+            <div class="input-wrap">
+              <input type="number" id="s_rate" class="has-suffix" value="5" min="0" step="0.1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div class="card">
+        <h2><span class="dot"></span>Resultados</h2>
+        <div class="results">
+          <div class="result-box positive">
+            <div class="lbl">Necesitas ahorrar al mes</div>
+            <div class="val" id="s_monthly">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Equivale al año</div>
+            <div class="val" id="s_yearly">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Total que aportarás</div>
+            <div class="val" id="s_contributed">—</div>
+          </div>
+          <div class="result-box positive">
+            <div class="lbl">Intereses generados</div>
+            <div class="val" id="s_interest">—</div>
+          </div>
+        </div>
+        <div class="chart-box"><canvas id="savingsChart"></canvas></div>
+        <p class="note" id="s_message"></p>
+      </div>
+
+    </div>
+
+    <!-- ===== Sección explicativa / SEO ===== -->
+    <div class="content">
+
+      <div class="card">
+        <h2>¿Cómo funciona esta calculadora?</h2>
+        <p>
+          Esta herramienta responde a una pregunta muy concreta: <strong>¿cuánto necesito ahorrar
+          cada mes para alcanzar una cantidad objetivo en un plazo determinado?</strong> Es ideal
+          para planificar la jubilación, la entrada de una vivienda o cualquier meta de ahorro a
+          medio o largo plazo.
+        </p>
+        <p>
+          A diferencia de la calculadora de interés compuesto (que parte de lo que aportas y proyecta
+          el resultado), esta funciona <strong>al revés</strong>: tú fijas la meta y ella calcula la
+          aportación mensual necesaria, teniendo en cuenta que tus ahorros también generan
+          rentabilidad mientras tanto.
+        </p>
+        <p>Introduces cuatro datos:</p>
+        <ul>
+          <li><strong>Cantidad objetivo:</strong> el dinero que quieres tener al final.</li>
+          <li><strong>Ahorro inicial:</strong> lo que ya tienes acumulado (opcional).</li>
+          <li><strong>Plazo:</strong> los años de los que dispones para conseguirlo.</li>
+          <li><strong>Rentabilidad anual esperada:</strong> el rendimiento medio que asumes para tus inversiones.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Conceptos clave</h2>
+        <h3>Aportación mensual</h3>
+        <p>La cantidad que deberías ahorrar e invertir cada mes para llegar a tu objetivo. Es el resultado principal de la calculadora.</p>
+        <h3>Rentabilidad esperada</h3>
+        <p>El rendimiento medio anual que asumes para tus ahorros invertidos. Cuanto mayor sea (y más realista), menos tendrás que aportar de tu bolsillo, porque el interés compuesto hace parte del trabajo.</p>
+        <h3>Intereses generados</h3>
+        <p>La diferencia entre tu objetivo final y todo lo que has puesto de tu bolsillo (ahorro inicial más aportaciones). Es lo que "gana" tu dinero por el camino.</p>
+        <h3>El factor tiempo</h3>
+        <p>Cuanto antes empieces, menos tendrás que ahorrar cada mes, porque el interés compuesto tiene más años para crecer. Empezar pronto es, con diferencia, la palanca más potente.</p>
+      </div>
+
+      <div class="card faq">
+        <h2>Preguntas frecuentes</h2>
+        <details>
+          <summary>¿Qué rentabilidad debería poner?</summary>
+          <p>Depende de cómo inviertas. Una cartera conservadora rendirá menos que una de renta variable. Como referencia histórica orientativa, una cartera diversificada a largo plazo ha rondado el 4-7 % anual, pero con variabilidad y sin garantías. Usa una cifra prudente.</p>
+        </details>
+        <details>
+          <summary>¿Tiene en cuenta la inflación?</summary>
+          <p>No directamente. El objetivo está en euros de hoy. Si quieres preservar poder adquisitivo, plantea una meta algo mayor o usa una rentabilidad "real" (rentabilidad esperada menos inflación).</p>
+        </details>
+        <details>
+          <summary>¿Y si ya tengo ahorrado más de lo que necesito?</summary>
+          <p>Si tu ahorro inicial, por sí solo, ya alcanza el objetivo con la rentabilidad indicada, la calculadora te lo indicará y la aportación mensual necesaria será cero.</p>
+        </details>
+        <details>
+          <summary>¿Incluye impuestos?</summary>
+          <p>No. No se descuenta la fiscalidad de las plusvalías ni de los productos de ahorro, que depende de cada caso. Conviene tenerla en cuenta y consultarla con un profesional.</p>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p class="disclaimer">
+      Herramienta orientativa con fines informativos. Las rentabilidades son estimaciones y no están
+      garantizadas; la rentabilidad pasada no asegura resultados futuros. No se consideran inflación
+      ni impuestos. No constituye asesoramiento financiero ni de inversión.
+    </p>
+    <p>© 2026 · Calcuyo · Calculadoras financieras</p>
+  </footer>
+
+<script src="assets/utils.js"></script>
+<script>
+/* ===== Lógica de ahorro / jubilación =====
+   Calcula la aportación mensual necesaria para alcanzar un objetivo.
+   Fórmula del valor futuro con aportaciones:
+     FV = P*(1+i)^N + PMT * [((1+i)^N - 1) / i]
+   Despejamos PMT (aportación mensual). */
+let savingsChart;
+
+function calcSavings() {
+  const goal    = num('s_goal');
+  const initial = num('s_initial');
+  const years   = Math.max(1, Math.round(num('s_years')));
+  const rate    = num('s_rate') / 100;
+
+  const i = rate / 12;        // tipo mensual
+  const N = years * 12;       // número de meses
+
+  // Valor futuro del ahorro inicial por sí solo
+  const fvInitial = initial * Math.pow(1 + i, N);
+
+  // Aportación mensual necesaria para cubrir lo que falta
+  let pmt;
+  if (i === 0) {
+    pmt = (goal - initial) / N;
+  } else {
+    const factor = (Math.pow(1 + i, N) - 1) / i;
+    pmt = (goal - fvInitial) / factor;
+  }
+
+  const msgEl = document.getElementById('s_message');
+  let monthly = pmt;
+
+  if (monthly <= 0) {
+    // El ahorro inicial ya alcanza (o supera) el objetivo
+    monthly = 0;
+    msgEl.textContent = '¡Buenas noticias! Con tu ahorro inicial y la rentabilidad indicada ya alcanzarías el objetivo sin aportar nada más.';
+  } else {
+    msgEl.textContent = 'El gráfico muestra cómo se acumularía tu patrimonio hasta alcanzar el objetivo, separando lo aportado de los intereses generados.';
+  }
+
+  const totalContributed = initial + monthly * N;
+  const totalInterest = Math.max(0, goal - totalContributed);
+
+  // Volcado de resultados
+  document.getElementById('s_monthly').textContent     = euro2(monthly);
+  document.getElementById('s_yearly').textContent      = euro(monthly * 12);
+  document.getElementById('s_contributed').textContent = euro(totalContributed);
+  document.getElementById('s_interest').textContent    = euro(totalInterest);
+
+  // Datos del gráfico (evolución año a año)
+  const labels = ['Año 0'];
+  const balanceData = [initial];
+  const investedData = [initial];
+
+  let balance = initial, invested = initial;
+  for (let m = 1; m <= N; m++) {
+    balance = balance * (1 + i) + monthly;
+    invested += monthly;
+    if (m % 12 === 0 || m === N) {
+      labels.push('Año ' + Math.ceil(m / 12));
+      balanceData.push(balance);
+      investedData.push(invested);
+    }
+  }
+
+  const datasets = [
+    { label: 'Patrimonio', data: balanceData, borderColor: '#15803d',
+      backgroundColor: 'rgba(21,128,61,0.12)', fill: true, tension: 0.25, pointRadius: 0, borderWidth: 2.5 },
+    { label: 'Total aportado', data: investedData, borderColor: '#1e3a5f',
+      backgroundColor: 'transparent', fill: false, tension: 0.25, pointRadius: 0, borderWidth: 2, borderDash: [6,4] }
+  ];
+
+  if (savingsChart) {
+    savingsChart.data.labels = labels;
+    savingsChart.data.datasets = datasets;
+    savingsChart.update();
+  } else {
+    savingsChart = new Chart(document.getElementById('savingsChart'), {
+      type: 'line', data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { usePointStyle: true } }, tooltip: tooltipEuro },
+        scales: { y: { beginAtZero: true, ...axisEuro }, x: { grid: { display: false } } }
+      }
+    });
+  }
+}
+
+['s_goal','s_initial','s_years','s_rate'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcSavings));
+calcSavings();
+</script>
+</body>
+</html>
