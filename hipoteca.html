@@ -63,6 +63,34 @@
             </div>
           </div>
         </div>
+
+        <h2 style="margin-top:18px"><span class="dot"></span>Gastos y bonificaciones (opcional)</h2>
+        <p class="note" style="margin-top:0;margin-bottom:14px">Rellena estos campos para estimar el coste real y la TAE. Déjalos en blanco para ignorarlos.</p>
+
+        <div class="field">
+          <label>Gastos iniciales (tasación, gestoría, etc.)</label>
+          <div class="input-wrap">
+            <input type="number" id="h_fees" class="has-suffix" value="" min="0" step="100" placeholder="—">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Reducción del TIN por productos vinculados</label>
+            <div class="input-wrap">
+              <input type="number" id="h_bonif" class="has-suffix" value="" min="0" step="0.05" placeholder="—">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Coste anual de esos productos (seguros…)</label>
+            <div class="input-wrap">
+              <input type="number" id="h_products" class="has-suffix" value="" min="0" step="50" placeholder="—">
+              <span class="suffix">€</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Resultados -->
@@ -84,6 +112,18 @@
           <div class="result-box negative">
             <div class="lbl">Intereses totales</div>
             <div class="val" id="h_interest">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">TIN aplicado</div>
+            <div class="val" id="h_tin">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">TAE estimada</div>
+            <div class="val" id="h_tae">—</div>
+          </div>
+          <div class="result-box" id="h_totalCostBox" style="display:none">
+            <div class="lbl">Coste total (cuotas + gastos + productos)</div>
+            <div class="val" id="h_totalCost">—</div>
           </div>
         </div>
         <div class="chart-box"><canvas id="mortgageChart"></canvas></div>
@@ -145,7 +185,9 @@
         <p>El porcentaje de interés que aplica el banco al préstamo. Es el dato que se usa para calcular la cuota, pero no incluye comisiones ni gastos asociados.</p>
 
         <h3>TAE (Tasa Anual Equivalente)</h3>
-        <p>Refleja el coste real del préstamo incluyendo comisiones y algunos gastos. Es útil para comparar ofertas entre bancos, pero esta calculadora trabaja con el TIN para estimar la cuota.</p>
+        <p>Refleja el coste real del préstamo incluyendo comisiones, gastos y el coste de los productos vinculados. Es la cifra más útil para comparar ofertas entre bancos. Si rellenas los campos opcionales de gastos y productos, esta calculadora muestra una <strong>TAE estimada</strong> orientativa (no es la TAE oficial del banco, que se calcula según una fórmula regulada).</p>
+        <h3>Bonificaciones (productos vinculados)</h3>
+        <p>Muchos bancos reducen el TIN si contratas productos como seguros de hogar, vida o domiciliación de nómina. Esa rebaja abarata la cuota, pero el coste anual de esos productos puede compensar el ahorro: por eso conviene mirar la TAE y no solo el tipo.</p>
 
         <h3>Amortización</h3>
         <p>Es la parte de cada cuota que reduce la deuda. Cuanto más avanzas en el préstamo, mayor proporción de tu cuota va a amortizar capital y menos a intereses.</p>
@@ -164,7 +206,15 @@
 
         <details>
           <summary>¿Incluye los gastos de constitución de la hipoteca?</summary>
-          <p>No. El cálculo es solo del préstamo (cuota e intereses). No incluye tasación, notaría, gestoría, ni los impuestos de la compraventa. Esos gastos van aparte.</p>
+          <p>La cuota e intereses se calculan solo sobre el préstamo. Pero si rellenas el campo opcional de gastos iniciales (tasación, gestoría…) y el coste de los productos vinculados, la calculadora los incorpora en la TAE estimada y en el coste total de la operación. No incluye los impuestos de la compraventa de la vivienda.</p>
+        </details>
+        <details>
+          <summary>¿La TAE que muestra es la oficial del banco?</summary>
+          <p>No. Es una <strong>estimación orientativa</strong> calculada a partir de los datos que introduces. La TAE oficial se rige por una fórmula regulada y puede incluir conceptos distintos. Úsala como referencia para comparar, pero confirma siempre la TAE real en la oferta vinculante del banco.</p>
+        </details>
+        <details>
+          <summary>¿Me conviene contratar los productos para bajar el TIN?</summary>
+          <p>Depende. La bonificación reduce la cuota, pero el coste anual de los seguros u otros productos puede superar ese ahorro. Compara la TAE estimada con y sin productos vinculados para verlo en cada caso.</p>
         </details>
 
         <details>
@@ -195,12 +245,38 @@
 /* ===== Lógica de la hipoteca (sistema francés) ===== */
 let mortgageChart;
 
+// TAE estimada: tipo anual equivalente que iguala el dinero recibido (préstamo
+// menos gastos iniciales) con los pagos (cuota + parte mensual de los productos).
+// Se resuelve por bisección sobre el tipo mensual. Es una APROXIMACIÓN orientativa.
+function estimateTAE(netReceived, monthlyOutflow, n) {
+  if (netReceived <= 0 || monthlyOutflow <= 0) return NaN;
+  const npv = (r) => {
+    if (r === 0) return netReceived - monthlyOutflow * n;
+    return netReceived - monthlyOutflow * (1 - Math.pow(1 + r, -n)) / r;
+  };
+  let lo = 0, hi = 0.05;           // tipo mensual entre 0% y 5% (≈80% anual)
+  if (npv(hi) > 0) return NaN;     // fuera de rango
+  for (let k = 0; k < 100; k++) {
+    const mid = (lo + hi) / 2;
+    if (npv(mid) > 0) lo = mid; else hi = mid;
+  }
+  const monthly = (lo + hi) / 2;
+  return (Math.pow(1 + monthly, 12) - 1) * 100;   // a tipo anual equivalente
+}
+
 function calcMortgage() {
   const principal = num('h_amount');
-  const annualRate = num('h_rate') / 100;
   const years = Math.max(1, Math.round(num('h_years')));
   const n = years * 12;                 // número total de cuotas
-  const i = annualRate / 12;            // tipo mensual
+
+  // Tipo aplicado = TIN menos la bonificación por productos vinculados (opcional)
+  const bonif = num('h_bonif');
+  const appliedRate = Math.max(0, num('h_rate') - bonif) / 100;
+  const i = appliedRate / 12;           // tipo mensual
+
+  // Campos opcionales de gastos
+  const fees = num('h_fees');           // gastos iniciales
+  const products = num('h_products');   // coste anual de productos vinculados
 
   // Cuota mensual (sistema francés)
   let payment;
@@ -210,11 +286,28 @@ function calcMortgage() {
   const totalPaid = payment * n;
   const totalInterest = totalPaid - principal;
 
-  // Volcado de resultados
+  // Volcado de resultados base
   document.getElementById('h_payment').textContent  = euro2(payment);
   document.getElementById('h_npay').textContent     = n + ' cuotas';
   document.getElementById('h_total').textContent    = euro(totalPaid);
   document.getElementById('h_interest').textContent = euro(totalInterest);
+  document.getElementById('h_tin').textContent      = pct(appliedRate * 100);
+
+  // TAE estimada: incluye gastos iniciales y coste mensual de los productos
+  const monthlyOutflow = payment + products / 12;
+  const netReceived = principal - fees;
+  const tae = estimateTAE(netReceived, monthlyOutflow, n);
+  document.getElementById('h_tae').textContent = isFinite(tae) ? pct(tae) : '—';
+
+  // Coste total (solo si hay gastos o productos)
+  const totalCostBox = document.getElementById('h_totalCostBox');
+  if (fees > 0 || products > 0) {
+    const totalCost = totalPaid + fees + products * years;
+    document.getElementById('h_totalCost').textContent = euro(totalCost);
+    totalCostBox.style.display = 'block';
+  } else {
+    totalCostBox.style.display = 'none';
+  }
 
   // Recorrido mes a mes para la tabla anual y el gráfico
   const labels = ['Año 0'];
@@ -278,7 +371,7 @@ function calcMortgage() {
   }
 }
 
-['h_amount','h_rate','h_years'].forEach(id =>
+['h_amount','h_rate','h_years','h_fees','h_bonif','h_products'].forEach(id =>
   document.getElementById(id).addEventListener('input', calcMortgage));
 calcMortgage();
 </script>

@@ -40,10 +40,39 @@
         <h2><span class="dot"></span>Tu objetivo</h2>
 
         <div class="field">
+          <label>¿Qué quieres conseguir?</label>
+          <div class="seg" id="s_mode">
+            <button type="button" class="active" data-mode="capital">Acumular un capital</button>
+            <button type="button" data-mode="income">Una renta mensual</button>
+          </div>
+        </div>
+
+        <!-- Modo A: acumular un capital -->
+        <div class="field" id="s_goalField">
           <label>Cantidad que quieres conseguir</label>
           <div class="input-wrap">
             <input type="number" id="s_goal" class="has-suffix" value="300000" min="0" step="1000">
             <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <!-- Modo B: poder retirar una renta mensual durante X años -->
+        <div id="s_incomeFields" style="display:none">
+          <div class="row">
+            <div class="field">
+              <label>Renta mensual deseada</label>
+              <div class="input-wrap">
+                <input type="number" id="s_income" class="has-suffix" value="1500" min="0" step="50">
+                <span class="suffix">€</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Durante</label>
+              <div class="input-wrap">
+                <input type="number" id="s_incomeYears" class="has-suffix" value="25" min="1" max="60" step="1">
+                <span class="suffix">años</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -93,6 +122,10 @@
             <div class="lbl">Intereses generados</div>
             <div class="val" id="s_interest">—</div>
           </div>
+          <div class="result-box" id="s_capitalBox" style="display:none">
+            <div class="lbl">Capital necesario al empezar a cobrar</div>
+            <div class="val" id="s_capitalNeeded">—</div>
+          </div>
         </div>
         <div class="chart-box"><canvas id="savingsChart"></canvas></div>
         <p class="note" id="s_message"></p>
@@ -141,6 +174,10 @@
       <div class="card faq">
         <h2>Preguntas frecuentes</h2>
         <details>
+          <summary>¿Qué diferencia hay entre "acumular un capital" y "una renta mensual"?</summary>
+          <p>En el modo <strong>acumular un capital</strong> fijas una cantidad final concreta. En el modo <strong>renta mensual</strong> indicas cuánto quieres cobrar al mes y durante cuántos años; la calculadora estima primero qué capital necesitarías tener para sostener esa renta (asumiendo que el dinero sigue invertido a la rentabilidad indicada) y luego calcula cuánto ahorrar al mes para llegar a ese capital.</p>
+        </details>
+        <details>
           <summary>¿Qué rentabilidad debería poner?</summary>
           <p>Depende de cómo inviertas. Una cartera conservadora rendirá menos que una de renta variable. Como referencia histórica orientativa, una cartera diversificada a largo plazo ha rondado el 4-7 % anual, pero con variabilidad y sin garantías. Usa una cifra prudente.</p>
         </details>
@@ -178,15 +215,44 @@
      FV = P*(1+i)^N + PMT * [((1+i)^N - 1) / i]
    Despejamos PMT (aportación mensual). */
 let savingsChart;
+let savingsMode = 'capital';   // 'capital' = acumular X · 'income' = renta mensual
+
+// Toggle entre los dos modos de objetivo
+document.getElementById('s_mode').addEventListener('click', (e) => {
+  if (!e.target.dataset.mode) return;
+  savingsMode = e.target.dataset.mode;
+  document.querySelectorAll('#s_mode button').forEach(b => b.classList.toggle('active', b.dataset.mode === savingsMode));
+  document.getElementById('s_goalField').style.display    = savingsMode === 'capital' ? 'block' : 'none';
+  document.getElementById('s_incomeFields').style.display = savingsMode === 'income'  ? 'block' : 'none';
+  document.getElementById('s_capitalBox').style.display   = savingsMode === 'income'  ? 'block' : 'none';
+  calcSavings();
+});
 
 function calcSavings() {
-  const goal    = num('s_goal');
   const initial = num('s_initial');
   const years   = Math.max(1, Math.round(num('s_years')));
   const rate    = num('s_rate') / 100;
 
   const i = rate / 12;        // tipo mensual
   const N = years * 12;       // número de meses
+
+  // El objetivo (goal) depende del modo elegido
+  let goal;
+  if (savingsMode === 'income') {
+    // Capital necesario para retirar una renta mensual durante X años.
+    // Valor actual de una renta mensual (asumiendo la misma rentabilidad en la fase de cobro).
+    const incomeM = num('s_income');
+    const incomeYears = Math.max(1, Math.round(num('s_incomeYears')));
+    const M = incomeYears * 12;
+    if (i === 0) {
+      goal = incomeM * M;
+    } else {
+      goal = incomeM * (1 - Math.pow(1 + i, -M)) / i;
+    }
+    document.getElementById('s_capitalNeeded').textContent = euro(goal);
+  } else {
+    goal = num('s_goal');
+  }
 
   // Valor futuro del ahorro inicial por sí solo
   const fvInitial = initial * Math.pow(1 + i, N);
@@ -260,7 +326,7 @@ function calcSavings() {
   }
 }
 
-['s_goal','s_initial','s_years','s_rate'].forEach(id =>
+['s_goal','s_initial','s_years','s_rate','s_income','s_incomeYears'].forEach(id =>
   document.getElementById(id).addEventListener('input', calcSavings));
 calcSavings();
 </script>
