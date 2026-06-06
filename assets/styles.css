@@ -1,0 +1,143 @@
+/* =================================================================
+   ESTILOS COMPARTIDOS — Suite de calculadoras
+   Tema CLARO y sobrio · blanco + azul marino + verde apagado
+   ================================================================= */
+
+:root {
+  --bg:          #f6f8fb;   /* fondo gris muy claro */
+  --bg-panel:    #ffffff;   /* paneles blancos */
+  --bg-input:    #ffffff;
+  --bg-soft:     #f0f3f8;   /* relleno sutil (resultados neutros) */
+  --border:      #dce3ed;   /* bordes grises claros */
+  --text:        #1a2b45;   /* gris azulado oscuro para texto */
+  --text-dim:    #64748b;   /* texto secundario */
+  --accent:      #1e3a5f;   /* azul marino sobrio */
+  --accent-hover:#16314f;
+  --green:       #15803d;   /* verde apagado para positivos */
+  --green-soft:  #eaf6ee;
+  --red:         #b91c1c;
+  --shadow:      0 1px 3px rgba(16,24,40,0.06), 0 1px 2px rgba(16,24,40,0.04);
+  --shadow-lg:   0 4px 16px rgba(16,24,40,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+/* ====== Barra de navegación superior ====== */
+.topbar {
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(8px);
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar .inner {
+  max-width: 1080px; margin: 0 auto; padding: 14px 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand {
+  font-weight: 700; font-size: 1.1rem; text-decoration: none;
+  display: flex; align-items: center; gap: 10px; color: var(--text);
+  letter-spacing: -0.2px;
+}
+.brand .logo {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  display: grid; place-items: center; font-size: 1rem; font-weight: 700;
+}
+.brand span.name { color: var(--text); }
+.topnav { display: flex; gap: 4px; flex-wrap: wrap; }
+.topnav a {
+  color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+  padding: 8px 12px; border-radius: 8px; transition: all 0.15s;
+}
+.topnav a:hover { color: var(--text); background: var(--bg-soft); }
+.topnav a.active { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
+
+/* ====== Hero / cabecera de página ====== */
+.page-head { text-align: center; padding: 44px 0 28px; }
+.page-head h1 {
+  font-size: 2rem; font-weight: 700; letter-spacing: -0.6px; color: var(--text);
+}
+.page-head p { color: var(--text-dim); margin-top: 10px; max-width: 620px; margin-left: auto; margin-right: auto; }
+
+/* ====== Home: tarjetas de calculadoras ====== */
+.cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; padding: 10px 0 40px; }
+@media (max-width: 820px) { .cards { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .cards { grid-template-columns: 1fr; } }
+
+.tool-card {
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px;
+  padding: 22px; text-decoration: none; color: var(--text);
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+  display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.tool-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow-lg); }
+.tool-card .ico { font-size: 1.7rem; }
+.tool-card h3 { font-size: 1.02rem; font-weight: 600; }
+.tool-card p { font-size: 0.85rem; color: var(--text-dim); }
+.tool-card.soon { opacity: 0.7; pointer-events: none; }
+.badge {
+  position: absolute; top: 14px; right: 14px; font-size: 0.66rem; font-weight: 600;
+  background: var(--bg-soft); border: 1px solid var(--border); color: var(--text-dim);
+  padding: 3px 9px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.4px;
+}
+
+/* ====== Tarjetas / paneles genéricos ====== */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; padding-bottom: 24px; }
+@media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px;
+  padding: 24px; box-shadow: var(--shadow);
+}
+.card h2 { font-size: 0.95rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+  text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-dim); font-weight: 600; }
+.card h2 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+/* ====== Inputs ====== */
+.field { margin-bottom: 15px; }
+.field label { display: block; font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; }
+.input-wrap { position: relative; display: flex; align-items: center; }
+input[type="number"], input[type="text"], select {
+  width: 100%; padding: 11px 12px; background: var(--bg-input);
+  border: 1px solid var(--border); border-radius: 9px; color: var(--text);
+  font-size: 0.95rem; transition: border-color 0.15s, box-shadow 0.15s;
+}
+input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(30,58,95,0.12); }
+.suffix { position: absolute; right: 12px; color: var(--text-dim); font-size: 0.85rem; pointer-events: none; }
+input.has-suffix { padding-right: 32px; }
+.row { display: flex; gap: 12px; }
+.row .field { flex: 1; }
+
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 6px; }
+.seg button { background: var(--bg-panel); border: none; color: var(--text-dim); padding: 5px 12px; font-size: 0.78rem; cursor: pointer; font-weight: 600; }
+.seg button.active { background: var(--accent); color: #fff; }
+
+/* ====== Resultados ====== */
+.results { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+@media (max-width: 480px) { .results { grid-template-columns: 1fr; } }
+.result-box { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 11px; padding: 14px; }
+.result-box .lbl { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 4px; }
+.result-box .val { font-size: 1.3rem; font-weight: 700; color: var(--text); }
+.result-box.positive { border-color: #c4e6ce; background: var(--green-soft); }
+.result-box.positive .val { color: var(--green); }
+.result-box.negative .val { color: var(--red); }
+
+.chart-box { margin-top: 8px; position: relative; height: 280px; }
+.note { font-size: 0.78rem; color: var(--text-dim); margin-top: 14px; line-height: 1.6; }
+
+/* ====== Pie ====== */
+footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; color: var(--text-dim); font-size: 0.82rem; background: var(--bg-panel); }
+footer .disclaimer { max-width: 720px; margin: 0 auto 8px; line-height: 1.6; }
