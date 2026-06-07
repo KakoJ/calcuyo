@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuándo podré comprarme un piso? Calculadora | Calcuyo</title>
+<meta name="description" content="Calcula cuándo podrás comprarte un piso: cuántos años tardarás en reunir la entrada y los gastos, y si la cuota de la hipoteca encajaría con tus ingresos. Gratis.">
+<link rel="canonical" href="https://calcuyo.com/cuando-comprar-piso.html">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <span class="logo">€</span>
+        <span class="name">Calcuyo</span>
+      </a>
+      <nav class="topnav">
+        <a href="index.html">Inicio</a>
+        <a href="interes-compuesto.html">Interés compuesto</a>
+        <a href="rentabilidad-inmobiliaria.html">Inmobiliaria</a>
+        <a href="hipoteca.html">Hipoteca</a>
+        <a href="ahorro.html">Ahorro</a>
+        <a href="comprar-vs-alquilar.html">Comprar o alquilar</a>
+        <a href="sueldo-neto.html">Sueldo neto</a>
+        <a href="cuando-comprar-piso.html" class="active">¿Cuándo un piso?</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <h1>¿Cuándo podré comprarme un piso?</h1>
+      <p>Descubre cuántos años necesitas para reunir la entrada y los gastos, y si la cuota de la hipoteca encajaría con tus ingresos.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- Formulario -->
+      <div class="card">
+        <h2><span class="dot"></span>El piso</h2>
+
+        <div class="field">
+          <label>Precio del piso que quieres</label>
+          <div class="input-wrap">
+            <input type="number" id="cp_price" class="has-suffix" value="200000" min="0" step="1000">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Entrada (% que no financia el banco)</label>
+            <div class="input-wrap">
+              <input type="number" id="cp_downPct" class="has-suffix" value="20" min="5" max="100" step="1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Gastos de compra</label>
+            <div class="input-wrap">
+              <input type="number" id="cp_costsPct" class="has-suffix" value="12" min="0" step="0.5">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Revalorización anual del precio (opcional)</label>
+          <div class="input-wrap">
+            <input type="number" id="cp_appreciation" class="has-suffix" value="2" step="0.1">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <h2 style="margin-top:18px"><span class="dot"></span>Tu ahorro</h2>
+        <div class="field">
+          <label>Ahorro que ya tienes</label>
+          <div class="input-wrap">
+            <input type="number" id="cp_savings" class="has-suffix" value="15000" min="0" step="500">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Cuánto ahorras al mes</label>
+            <div class="input-wrap">
+              <input type="number" id="cp_monthly" class="has-suffix" value="600" min="0" step="50">
+              <span class="suffix">€</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Rentabilidad de tus ahorros</label>
+            <div class="input-wrap">
+              <input type="number" id="cp_savRate" class="has-suffix" value="2" min="0" step="0.1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:18px"><span class="dot"></span>Hipoteca e ingresos</h2>
+        <div class="field">
+          <label>Tus ingresos netos mensuales</label>
+          <div class="input-wrap">
+            <input type="number" id="cp_income" class="has-suffix" value="2000" min="0" step="50">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Tipo de interés hipoteca</label>
+            <div class="input-wrap">
+              <input type="number" id="cp_loanRate" class="has-suffix" value="3" min="0" step="0.1">
+              <span class="suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Plazo hipoteca</label>
+            <div class="input-wrap">
+              <input type="number" id="cp_loanYears" class="has-suffix" value="30" min="1" max="40" step="1">
+              <span class="suffix">años</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div class="card">
+        <h2><span class="dot"></span>Resultados</h2>
+
+        <div class="result-box" id="cp_timeBox" style="margin-bottom:12px">
+          <div class="lbl">Tiempo hasta reunir la entrada + gastos</div>
+          <div class="val" id="cp_time" style="font-size:1.5rem">—</div>
+        </div>
+
+        <div class="results">
+          <div class="result-box">
+            <div class="lbl">Necesitas reunir (entrada + gastos)</div>
+            <div class="val" id="cp_target">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Importe de la hipoteca</div>
+            <div class="val" id="cp_loan">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Cuota estimada</div>
+            <div class="val" id="cp_payment">—</div>
+          </div>
+          <div class="result-box">
+            <div class="lbl">Cuota sobre tus ingresos</div>
+            <div class="val" id="cp_ratio">—</div>
+          </div>
+        </div>
+
+        <div class="result-box" id="cp_verdictBox" style="margin-bottom:18px">
+          <div class="lbl">¿Encaja la cuota con tus ingresos?</div>
+          <div class="val" id="cp_verdict" style="font-size:1.05rem">—</div>
+        </div>
+
+        <div class="chart-box"><canvas id="saveChart"></canvas></div>
+        <p class="note">El gráfico muestra cómo tu ahorro acumulado se acerca al objetivo (entrada + gastos). Si activas la revalorización, el objetivo sube con el tiempo porque el piso se encarece.</p>
+      </div>
+
+    </div>
+
+    <!-- ===== Sección explicativa / SEO ===== -->
+    <div class="content">
+
+      <div class="card">
+        <h2>¿Cómo funciona esta calculadora?</h2>
+        <p>
+          Comprar un piso tiene dos barreras: <strong>reunir el dinero inicial</strong> (la entrada y los gastos,
+          que el banco no financia) y que <strong>la cuota de la hipoteca encaje con tus ingresos</strong>. Esta
+          herramienta resuelve las dos a la vez.
+        </p>
+        <p>Primero calcula cuánto necesitas tener antes de comprar:</p>
+        <ul>
+          <li><strong>Entrada:</strong> el porcentaje del precio que el banco no financia (normalmente, los bancos financian hasta el 80 %, así que harías falta un 20 % de entrada).</li>
+          <li><strong>Gastos de compra:</strong> impuestos (ITP o IVA), notaría, registro y gestoría, que se pagan aparte.</li>
+        </ul>
+        <p>
+          Luego proyecta tu ahorro mes a mes (lo que ya tienes más lo que aportas, con su rentabilidad) hasta
+          alcanzar ese objetivo, y estima en ese momento la <strong>cuota de la hipoteca</strong> sobre el importe
+          financiado, comparándola con tus ingresos.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Conceptos clave</h2>
+        <h3>Entrada</h3>
+        <p>El dinero que aportas de tu bolsillo sobre el precio del piso. Como los bancos no suelen financiar el 100 %, necesitas tener ahorrada al menos esa parte (habitualmente el 20 %).</p>
+        <h3>Gastos de compra</h3>
+        <p>Impuestos y trámites que se pagan al comprar y que no entran en la hipoteca. Suelen rondar el 10-13 % del precio según la comunidad autónoma y si la vivienda es nueva o usada.</p>
+        <h3>Esfuerzo hipotecario</h3>
+        <p>La proporción de tus ingresos que se va en la cuota. Como referencia prudente, se recomienda que no supere alrededor del 30-35 % de tus ingresos netos.</p>
+        <h3>Revalorización</h3>
+        <p>Si el piso se encarece mientras ahorras, el objetivo a reunir también sube. Por eso ahorrar rápido importa: el "blanco" se mueve.</p>
+      </div>
+
+      <div class="card faq">
+        <h2>Preguntas frecuentes</h2>
+        <details>
+          <summary>¿Por qué necesito una entrada y no me lo financian todo?</summary>
+          <p>Los bancos suelen financiar como máximo el 80 % del valor de tasación o compraventa (el menor de los dos). El 20 % restante, más los gastos, debes aportarlo tú. Hay excepciones, pero es la norma general.</p>
+        </details>
+        <details>
+          <summary>¿Qué significa que la cuota "encaja" con mis ingresos?</summary>
+          <p>Es una regla orientativa: si la cuota supera en torno al 30-35 % de tus ingresos netos, el banco puede no concederte la hipoteca o tu economía quedaría muy ajustada. La calculadora te avisa con un semáforo.</p>
+        </details>
+        <details>
+          <summary>¿La rentabilidad de mis ahorros influye mucho?</summary>
+          <p>Si ahorras durante muchos años, sí: invertir tus ahorros puede acercarte antes al objetivo. Para plazos cortos, el efecto es pequeño y conviene ser prudente con el riesgo.</p>
+        </details>
+        <details>
+          <summary>¿Esto garantiza que me darán la hipoteca?</summary>
+          <p>No. Es una estimación. La concesión real depende del banco, tu perfil, estabilidad laboral, otras deudas y avales. Úsala como orientación para planificar.</p>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p class="disclaimer">
+      Herramienta orientativa con fines informativos. La concesión de una hipoteca y sus condiciones dependen
+      del banco y de tu perfil; los gastos de compra varían por comunidad autónoma. No se consideran impuestos
+      sobre el ahorro ni todas las circunstancias personales. No constituye asesoramiento financiero.
+    </p>
+    <p>© 2026 · Calcuyo · Calculadoras financieras</p>
+  </footer>
+
+<script src="assets/utils.js"></script>
+<script>
+/* ===== Lógica: ¿cuándo podré comprarme un piso? ===== */
+let saveChart;
+
+function monthlyPayment(loan, annualRate, years) {
+  if (loan <= 0 || years <= 0) return 0;
+  const i = annualRate / 100 / 12, n = years * 12;
+  if (i === 0) return loan / n;
+  return loan * i / (1 - Math.pow(1 + i, -n));
+}
+
+function calcWhenBuy() {
+  const price0    = num('cp_price');
+  const downPct   = num('cp_downPct') / 100;
+  const costsPct  = num('cp_costsPct') / 100;
+  const apprec    = num('cp_appreciation') / 100;
+  const savings0  = num('cp_savings');
+  const monthly   = num('cp_monthly');
+  const savRate   = num('cp_savRate') / 100;
+  const income    = num('cp_income');
+  const loanRate  = num('cp_loanRate');
+  const loanYears = Math.max(1, Math.round(num('cp_loanYears')));
+
+  const im = savRate / 12;                      // rentabilidad mensual del ahorro
+  const needFraction = downPct + costsPct;      // fracción del precio a reunir
+
+  const MAX_MONTHS = 600;                        // tope de búsqueda (50 años)
+  let balance = savings0;
+  let reachedMonth = -1;
+
+  // Datos para el gráfico (anuales)
+  const labels = ['Año 0'];
+  const saveData = [savings0];
+  const targetData = [price0 * needFraction];
+
+  for (let m = 1; m <= MAX_MONTHS; m++) {
+    balance = balance * (1 + im) + monthly;
+    const priceNow = price0 * Math.pow(1 + apprec, m / 12);
+    const targetNow = priceNow * needFraction;
+
+    if (reachedMonth === -1 && balance >= targetNow) reachedMonth = m;
+
+    if (m % 12 === 0) {
+      labels.push('Año ' + (m / 12));
+      saveData.push(balance);
+      targetData.push(targetNow);
+      // Cortamos el gráfico unos años después de alcanzar el objetivo (o a los 30)
+      if ((reachedMonth !== -1 && m >= reachedMonth + 12) || m >= 360) break;
+    }
+  }
+
+  const timeEl = document.getElementById('cp_time');
+  const tBox = document.getElementById('cp_timeBox');
+
+  if (savings0 >= price0 * needFraction) {
+    // Ya tienes lo necesario hoy
+    reachedMonth = 0;
+    timeEl.textContent = '¡Ya puedes! Ya tienes el dinero necesario.';
+    tBox.className = 'result-box positive';
+  } else if (reachedMonth === -1) {
+    timeEl.textContent = 'No lo alcanzas en 50 años con estos datos.';
+    tBox.className = 'result-box negative';
+  } else {
+    const yrs = Math.floor(reachedMonth / 12);
+    const mos = reachedMonth % 12;
+    let txt = '';
+    if (yrs > 0) txt += yrs + (yrs === 1 ? ' año' : ' años');
+    if (mos > 0) txt += (txt ? ' y ' : '') + mos + (mos === 1 ? ' mes' : ' meses');
+    timeEl.textContent = txt || 'Menos de un mes';
+    tBox.className = 'result-box positive';
+  }
+
+  // Situación en el momento de la compra
+  const monthsToBuy = Math.max(0, reachedMonth);
+  const priceAtBuy = price0 * Math.pow(1 + apprec, monthsToBuy / 12);
+  const target = priceAtBuy * needFraction;
+  const loan = priceAtBuy * (1 - downPct);          // la hipoteca nunca es el 100 %
+  const payment = monthlyPayment(loan, loanRate, loanYears);
+  const ratio = income > 0 ? (payment / income) * 100 : NaN;
+
+  document.getElementById('cp_target').textContent  = euro(target);
+  document.getElementById('cp_loan').textContent    = euro(loan);
+  document.getElementById('cp_payment').textContent = euro2(payment);
+  document.getElementById('cp_ratio').textContent   = pct(ratio);
+
+  // Semáforo de esfuerzo hipotecario
+  const vEl = document.getElementById('cp_verdict');
+  const vBox = document.getElementById('cp_verdictBox');
+  if (!isFinite(ratio)) {
+    vEl.textContent = 'Introduce tus ingresos para valorarlo.';
+    vBox.className = 'result-box';
+  } else if (ratio <= 30) {
+    vEl.textContent = 'Encaja bien: la cuota está dentro de lo recomendable (≤30 %).';
+    vBox.className = 'result-box positive';
+  } else if (ratio <= 35) {
+    vEl.textContent = 'Justo: la cuota está en el límite recomendable (30-35 %).';
+    vBox.className = 'result-box';
+  } else {
+    vEl.textContent = 'Ajustado: la cuota supera el 35 % de tus ingresos; el banco podría no concederla.';
+    vBox.className = 'result-box negative';
+  }
+
+  // Gráfico
+  const datasets = [
+    { label: 'Tu ahorro', data: saveData, borderColor: '#15803d',
+      backgroundColor: 'rgba(21,128,61,0.12)', fill: true, tension: 0.25, pointRadius: 0, borderWidth: 2.5 },
+    { label: 'Objetivo (entrada + gastos)', data: targetData, borderColor: '#b91c1c',
+      backgroundColor: 'transparent', fill: false, tension: 0.1, pointRadius: 0, borderWidth: 2, borderDash: [6,4] }
+  ];
+
+  if (saveChart) {
+    saveChart.data.labels = labels;
+    saveChart.data.datasets = datasets;
+    saveChart.update();
+  } else {
+    saveChart = new Chart(document.getElementById('saveChart'), {
+      type: 'line', data: { labels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { usePointStyle: true } }, tooltip: tooltipEuro },
+        scales: { y: { beginAtZero: true, ...axisEuro }, x: { grid: { display: false } } }
+      }
+    });
+  }
+}
+
+['cp_price','cp_downPct','cp_costsPct','cp_appreciation','cp_savings','cp_monthly','cp_savRate',
+ 'cp_income','cp_loanRate','cp_loanYears'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcWhenBuy));
+calcWhenBuy();
+</script>
+</body>
+</html>
