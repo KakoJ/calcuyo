@@ -64,6 +64,31 @@ body {
 .topnav a:hover { color: var(--text); background: var(--bg-soft); }
 .topnav a.active { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
 
+/* ====== Menú desplegable de calculadoras ====== */
+.dropdown { position: relative; display: inline-block; }
+.dropbtn {
+  background: transparent; border: none; font: inherit; cursor: pointer;
+  color: var(--text-dim); font-size: 0.9rem; font-weight: 500;
+  padding: 8px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;
+  transition: all 0.15s;
+}
+.dropbtn:hover { color: var(--text); background: var(--bg-soft); }
+.dropdown.active .dropbtn { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
+.caret { font-size: 0.75rem; transition: transform 0.2s; }
+.dropdown.open .caret { transform: rotate(180deg); }
+.dropmenu {
+  display: none; position: absolute; right: 0; top: calc(100% + 6px);
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: var(--shadow-lg); min-width: 240px; padding: 6px; z-index: 60;
+}
+.dropdown.open .dropmenu { display: block; }
+.dropmenu a {
+  display: block; padding: 10px 12px; border-radius: 8px;
+  color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; white-space: nowrap;
+}
+.dropmenu a:hover { background: var(--bg-soft); color: var(--text); }
+.dropmenu a.active { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
+
 /* ====== Hero / cabecera de página ====== */
 .page-head { text-align: center; padding: 44px 0 28px; }
 .page-head h1 {
