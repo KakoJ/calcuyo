@@ -56,13 +56,15 @@ body {
   display: grid; place-items: center; font-size: 1rem; font-weight: 700;
 }
 .brand span.name { color: var(--text); }
-.topnav { display: flex; gap: 4px; flex-wrap: wrap; }
-.topnav a {
+/* La barra de navegación NO debe envolverse: con flex-wrap el dropdown se rompe.
+   Si no cabe, en móvil reducimos paddings/tamaños abajo en el media query. */
+.topnav { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; }
+.topnav > a {
   color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500;
-  padding: 8px 12px; border-radius: 8px; transition: all 0.15s;
+  padding: 8px 12px; border-radius: 8px; transition: all 0.15s; white-space: nowrap;
 }
-.topnav a:hover { color: var(--text); background: var(--bg-soft); }
-.topnav a.active { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
+.topnav > a:hover { color: var(--text); background: var(--bg-soft); }
+.topnav > a.active { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
 
 /* ====== Menú desplegable de calculadoras ====== */
 .dropdown { position: relative; display: inline-block; }
@@ -70,24 +72,43 @@ body {
   background: transparent; border: none; font: inherit; cursor: pointer;
   color: var(--text-dim); font-size: 0.9rem; font-weight: 500;
   padding: 8px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;
-  transition: all 0.15s;
+  transition: all 0.15s; white-space: nowrap;
 }
 .dropbtn:hover { color: var(--text); background: var(--bg-soft); }
 .dropdown.active .dropbtn { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
-.caret { font-size: 0.75rem; transition: transform 0.2s; }
+.caret { font-size: 0.75rem; transition: transform 0.2s; display: inline-block; }
 .dropdown.open .caret { transform: rotate(180deg); }
+
+/* El desplegable está oculto por defecto y solo aparece cuando hay .open */
 .dropmenu {
-  display: none; position: absolute; right: 0; top: calc(100% + 6px);
+  display: none !important;
+  position: absolute; right: 0; top: calc(100% + 6px);
   background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px;
   box-shadow: var(--shadow-lg); min-width: 240px; padding: 6px; z-index: 60;
 }
-.dropdown.open .dropmenu { display: block; }
+.dropdown.open .dropmenu { display: block !important; }
 .dropmenu a {
   display: block; padding: 10px 12px; border-radius: 8px;
   color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; white-space: nowrap;
 }
 .dropmenu a:hover { background: var(--bg-soft); color: var(--text); }
 .dropmenu a.active { color: var(--accent); background: var(--bg-soft); font-weight: 600; }
+
+/* ====== Adaptación a móvil ======
+   En pantallas estrechas reducimos la barra y hacemos que el desplegable
+   ocupe casi todo el ancho de la pantalla, no solo el ancho del botón. */
+@media (max-width: 600px) {
+  .topbar .inner { padding: 12px 14px; gap: 10px; }
+  .brand { font-size: 1rem; }
+  .topnav { gap: 2px; }
+  .topnav > a, .dropbtn { padding: 7px 9px; font-size: 0.85rem; }
+  .dropmenu {
+    position: fixed;            /* anclado a la ventana, no al botón */
+    top: 60px;                  /* justo debajo de la barra */
+    left: 12px; right: 12px;    /* full-width con un poco de margen */
+    min-width: 0;
+  }
+}
 
 /* ====== Hero / cabecera de página ====== */
 .page-head { text-align: center; padding: 44px 0 28px; }
