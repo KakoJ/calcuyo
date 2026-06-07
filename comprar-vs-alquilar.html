@@ -132,7 +132,11 @@
 
       <!-- Resultados -->
       <div class="card">
-        <h2><span class="dot"></span>Resultados</h2>
+        <h2 class="with-share"><span class="dot"></span>Resultados
+          <span class="share-wrap">
+            <button id="shareBtn" class="share-btn" type="button" data-share="">↗ Compartir</button>
+          </span>
+        </h2>
         <div class="results">
           <div class="result-box positive">
             <div class="lbl">Patrimonio final comprando</div>
@@ -326,16 +330,23 @@ function calcRentBuy() {
 
   const verdictEl = document.getElementById('cr_verdict');
   const box = document.getElementById('cr_verdictBox');
+  let shareMsg;
   if (Math.abs(diff) < buyWorthEnd * 0.02) {
     verdictEl.textContent = 'Prácticamente empate entre comprar y alquilar.';
     box.className = 'result-box';
+    shareMsg = '⚖️ Comprar o alquilar: en mi caso es prácticamente empate. Calculado en calcuyo.com';
   } else if (diff > 0) {
     verdictEl.textContent = 'Comprar te deja ' + euro(diff) + ' más de patrimonio.';
     box.className = 'result-box positive';
+    shareMsg = '🏠 Comprar me deja ' + euro(diff) + ' más de patrimonio que alquilar, según calcuyo.com';
   } else {
     verdictEl.textContent = 'Alquilar e invertir te deja ' + euro(-diff) + ' más de patrimonio.';
     box.className = 'result-box positive';
+    shareMsg = '💸 Alquilar e invertir me deja ' + euro(-diff) + ' más de patrimonio que comprar, según calcuyo.com';
   }
+
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) shareBtn.setAttribute('data-share', shareMsg);
 
   // Gráfico
   const datasets = [

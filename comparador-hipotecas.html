@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparador de hipotecas: encuentra la mejor oferta | Calcuyo</title>
+<meta name="description" content="Compara hasta 3 ofertas de hipoteca a la vez. Calcula cuota, intereses totales y TAE estimada de cada una y descubre cuál te sale más barata.">
+<link rel="canonical" href="https://calcuyo.com/comparador-hipotecas.html">
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <span class="logo">€</span>
+        <span class="name">Calcuyo</span>
+      </a>
+      <nav class="topnav" id="site-nav"></nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <h1>Comparador de hipotecas</h1>
+      <p>Mete las ofertas que te ha pasado el banco y descubre cuál te sale realmente más barata, teniendo en cuenta gastos, bonificaciones y productos vinculados.</p>
+    </div>
+
+    <!-- Datos comunes a todas las ofertas -->
+    <div class="card" style="margin-bottom:20px">
+      <h2><span class="dot"></span>Importe del préstamo</h2>
+      <p class="note" style="margin-top:0;margin-bottom:14px">Es el dinero que pides al banco. Será el mismo para las tres ofertas (sería raro comparar préstamos de cuantías muy distintas).</p>
+      <div class="field" style="margin-bottom:0">
+        <div class="input-wrap">
+          <input type="number" id="ch_amount" class="has-suffix" value="180000" min="0" step="1000">
+          <span class="suffix">€</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Las tres ofertas en columnas -->
+    <div class="asset-cards" id="offersGrid"><!-- generado por JS --></div>
+
+    <!-- Tabla comparativa -->
+    <div class="card" style="margin-bottom:20px">
+      <h2><span class="dot"></span>Comparativa</h2>
+      <div class="table-wrap">
+        <table class="data" id="compareTable">
+          <thead>
+            <tr>
+              <th>Oferta</th>
+              <th>TIN aplicado</th>
+              <th>Cuota mensual</th>
+              <th>Intereses totales</th>
+              <th>Coste total</th>
+              <th>TAE estimada</th>
+            </tr>
+          </thead>
+          <tbody><!-- generado por JS --></tbody>
+        </table>
+      </div>
+      <p class="note">El "coste total" suma todas las cuotas, los gastos iniciales y el coste de los productos vinculados durante la vida del préstamo. La TAE es una estimación orientativa, no la cifra oficial del banco.</p>
+    </div>
+
+    <!-- Gráfico comparativo -->
+    <div class="card" style="margin-bottom:20px">
+      <h2><span class="dot"></span>Coste total comparado</h2>
+      <div class="chart-box"><canvas id="compareChart"></canvas></div>
+    </div>
+
+    <!-- ===== Sección explicativa / SEO ===== -->
+    <div class="content">
+
+      <div class="card">
+        <h2>¿Cómo funciona este comparador?</h2>
+        <p>
+          Recibes varias ofertas de hipoteca y quieres saber <strong>cuál te sale realmente más barata</strong>.
+          No basta con mirar el TIN: una oferta con un TIN bajo puede acabar siendo más cara si exige
+          seguros, gastos altos o comisiones. Este comparador pone las ofertas lado a lado y calcula el
+          <strong>coste total real</strong> y la <strong>TAE estimada</strong> de cada una.
+        </p>
+        <p>Para cada oferta puedes introducir:</p>
+        <ul>
+          <li><strong>TIN:</strong> el tipo de interés nominal antes de aplicar bonificaciones.</li>
+          <li><strong>Plazo:</strong> los años durante los que devolverás el préstamo.</li>
+          <li><strong>Gastos iniciales:</strong> tasación, gestoría y otros gastos asociados a la formalización.</li>
+          <li><strong>Reducción del TIN por productos vinculados:</strong> la rebaja que aplica el banco si contratas seguros u otros productos.</li>
+          <li><strong>Coste anual de esos productos:</strong> lo que pagas cada año por seguros u otros productos vinculados.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Cómo interpretar los resultados</h2>
+        <h3>Cuota mensual</h3>
+        <p>La cantidad que pagarías al banco cada mes. Una cuota baja no siempre es la mejor opción si el plazo es muy largo o si tiene productos vinculados caros.</p>
+        <h3>Coste total</h3>
+        <p>La suma de todas las cuotas + gastos iniciales + coste anual de los productos vinculados durante la vida del préstamo. Es la cifra clave para comparar.</p>
+        <h3>TAE estimada</h3>
+        <p>Aproximación al coste real anualizado del préstamo. Es la mejor forma de comparar ofertas con condiciones distintas. Recuerda: aquí se muestra una estimación, no la TAE oficial regulada del banco.</p>
+      </div>
+
+      <div class="card faq">
+        <h2>Preguntas frecuentes</h2>
+        <details>
+          <summary>¿Por qué el TIN más bajo no siempre gana?</summary>
+          <p>Porque la bonificación que reduce el TIN suele venir condicionada a contratar productos (seguros de vida, hogar, etc.) que tienen un coste anual. Si ese coste anual es alto, puede comer todo el ahorro de la rebaja, y la oferta sin bonificación acaba siendo más barata.</p>
+        </details>
+        <details>
+          <summary>¿Y si las ofertas tienen plazos distintos?</summary>
+          <p>Puedes compararlas igualmente. Ten en cuenta que un plazo más largo reduce la cuota pero aumenta los intereses totales. Para una comparación más justa, conviene ajustarlas al mismo plazo cuando sea posible.</p>
+        </details>
+        <details>
+          <summary>¿La TAE que muestra es la oficial?</summary>
+          <p>No. Es una estimación orientativa basada en los datos que introduces. La TAE oficial se rige por una fórmula regulada que puede incluir conceptos distintos. Verifica siempre la TAE real en la oferta vinculante de cada banco.</p>
+        </details>
+        <details>
+          <summary>¿Sirve para hipotecas a tipo variable?</summary>
+          <p>Está pensada para tipo fijo. En una hipoteca variable el tipo cambia en cada revisión, así que el resultado sería solo una foto del coste con el tipo actual.</p>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p class="disclaimer">
+      Herramienta orientativa con fines informativos. Los cálculos asumen hipotecas a tipo fijo,
+      sistema francés y supuestos constantes. La TAE mostrada es una estimación y no sustituye a
+      la TAE oficial que el banco está obligado a indicar en su oferta vinculante. No constituye
+      asesoramiento financiero ni una recomendación de contratación.
+    </p>
+    <p>© 2026 · Calcuyo · Calculadoras financieras</p>
+  </footer>
+
+<script src="assets/utils.js"></script>
+<script>
+/* ===== Comparador de hipotecas =====
+   El usuario mete hasta 3 ofertas, calculamos cuota/intereses/coste total
+   y TAE estimada para cada una. Marcamos la mejor en verde. */
+
+const COLORS = ['#15803d', '#1e3a5f', '#b08900'];   // verde, marino, amarillo apagado
+
+// 3 ofertas con valores por defecto
+const offers = [
+  { name: 'Oferta A', tin: 3.20, years: 25, fees: 1200, bonif: 0.50, products: 350 },
+  { name: 'Oferta B', tin: 3.00, years: 25, fees: 1500, bonif: 0.30, products: 250 },
+  { name: 'Oferta C', tin: 2.85, years: 25, fees: 1800, bonif: 0.00, products: 0   }
+];
+
+function monthlyPayment(loan, annualRate, years) {
+  if (loan <= 0 || years <= 0) return 0;
+  const i = annualRate / 100 / 12, n = years * 12;
+  if (i === 0) return loan / n;
+  return loan * i / (1 - Math.pow(1 + i, -n));
+}
+
+// TAE estimada por bisección (igual que en hipoteca.html)
+function estimateTAE(netReceived, monthlyOutflow, n) {
+  if (netReceived <= 0 || monthlyOutflow <= 0) return NaN;
+  const npv = (r) => {
+    if (r === 0) return netReceived - monthlyOutflow * n;
+    return netReceived - monthlyOutflow * (1 - Math.pow(1 + r, -n)) / r;
+  };
+  let lo = 0, hi = 0.05;
+  if (npv(hi) > 0) return NaN;
+  for (let k = 0; k < 100; k++) {
+    const mid = (lo + hi) / 2;
+    if (npv(mid) > 0) lo = mid; else hi = mid;
+  }
+  return (Math.pow(1 + (lo + hi) / 2, 12) - 1) * 100;
+}
+
+// Generamos las tarjetas de input dinámicamente
+function buildOfferCards() {
+  const wrap = document.getElementById('offersGrid');
+  wrap.innerHTML = '';
+  offers.forEach((o, idx) => {
+    const card = document.createElement('div');
+    card.className = 'asset-card';
+    card.innerHTML = `
+      <h3><span class="swatch" style="background:${COLORS[idx]}"></span>
+        <input type="text" data-i="${idx}" data-k="name" value="${o.name}" style="width:auto;display:inline-block;font-weight:600;border:none;background:transparent;color:var(--text);font-size:0.95rem;padding:2px 4px"></h3>
+      <div class="row">
+        <div class="field">
+          <label>TIN</label>
+          <div class="input-wrap">
+            <input type="number" class="has-suffix" data-i="${idx}" data-k="tin" value="${o.tin}" step="0.05" min="0">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Plazo</label>
+          <div class="input-wrap">
+            <input type="number" class="has-suffix" data-i="${idx}" data-k="years" value="${o.years}" min="1" max="40" step="1">
+            <span class="suffix">años</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Gastos iniciales</label>
+        <div class="input-wrap">
+          <input type="number" class="has-suffix" data-i="${idx}" data-k="fees" value="${o.fees}" min="0" step="50">
+          <span class="suffix">€</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Bonif. TIN</label>
+          <div class="input-wrap">
+            <input type="number" class="has-suffix" data-i="${idx}" data-k="bonif" value="${o.bonif}" min="0" step="0.05">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Productos/año</label>
+          <div class="input-wrap">
+            <input type="number" class="has-suffix" data-i="${idx}" data-k="products" value="${o.products}" min="0" step="50">
+            <span class="suffix">€</span>
+          </div>
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+  });
+
+  // Listeners de actualización en tiempo real
+  wrap.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const i = +inp.dataset.i, k = inp.dataset.k;
+      offers[i][k] = (k === 'name') ? inp.value : (parseFloat(inp.value) || 0);
+      calcCompare();
+    });
+  });
+}
+
+let compareChart;
+
+function calcCompare() {
+  const principal = num('ch_amount');
+
+  // Calculamos métricas para cada oferta
+  const results = offers.map((o, idx) => {
+    const appliedRate = Math.max(0, o.tin - o.bonif);
+    const n = Math.max(1, Math.round(o.years)) * 12;
+    const pmt = monthlyPayment(principal, appliedRate, o.years);
+    const totalCuotas = pmt * n;
+    const totalInterest = totalCuotas - principal;
+    const totalCost = totalCuotas + o.fees + o.products * o.years;
+    const tae = estimateTAE(principal - o.fees, pmt + o.products / 12, n);
+    return { idx, name: o.name, appliedRate, pmt, totalInterest, totalCost, tae };
+  });
+
+  // La mejor: la de menor coste total
+  const validCosts = results.filter(r => r.totalCost > 0).map(r => r.totalCost);
+  const bestCost = validCosts.length ? Math.min(...validCosts) : Infinity;
+
+  // Pintamos la tabla
+  const tbody = document.querySelector('#compareTable tbody');
+  tbody.innerHTML = '';
+  results.forEach(r => {
+    const isBest = r.totalCost === bestCost;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="swatch" style="background:${COLORS[r.idx]}"></span>${r.name}</td>
+      <td>${pct(r.appliedRate)}</td>
+      <td>${euro2(r.pmt)}</td>
+      <td>${euro(r.totalInterest)}</td>
+      <td class="${isBest ? 'best' : ''}">${euro(r.totalCost)}</td>
+      <td>${isFinite(r.tae) ? pct(r.tae) : '—'}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Gráfico de barras: coste total
+  const datasets = [{
+    label: 'Coste total',
+    data: results.map(r => r.totalCost),
+    backgroundColor: results.map(r => r.totalCost === bestCost ? '#22c55e' : '#94a3b8'),
+    borderRadius: 6
+  }];
+
+  if (compareChart) {
+    compareChart.data.labels = results.map(r => r.name);
+    compareChart.data.datasets = datasets;
+    compareChart.update();
+  } else {
+    compareChart = new Chart(document.getElementById('compareChart'), {
+      type: 'bar',
+      data: { labels: results.map(r => r.name), datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: tooltipEuro },
+        scales: { y: { beginAtZero: true, ...axisEuro }, x: { grid: { display: false } } }
+      }
+    });
+  }
+}
+
+document.getElementById('ch_amount').addEventListener('input', calcCompare);
+buildOfferCards();
+calcCompare();
+</script>
+</body>
+</html>

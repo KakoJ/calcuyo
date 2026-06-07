@@ -120,7 +120,11 @@
 
       <!-- Resultados -->
       <div class="card">
-        <h2><span class="dot"></span>Resultados</h2>
+        <h2 class="with-share"><span class="dot"></span>Resultados
+          <span class="share-wrap">
+            <button id="shareBtn" class="share-btn" type="button" data-share="">↗ Compartir</button>
+          </span>
+        </h2>
 
         <div class="result-box" id="cp_timeBox" style="margin-bottom:12px">
           <div class="lbl">Tiempo hasta reunir la entrada + gastos</div>
@@ -294,6 +298,16 @@ function calcWhenBuy() {
     if (mos > 0) txt += (txt ? ' y ' : '') + mos + (mos === 1 ? ' mes' : ' meses');
     timeEl.textContent = txt || 'Menos de un mes';
     tBox.className = 'result-box positive';
+  }
+
+  // Mensaje para el botón compartir (se actualiza en cada cálculo)
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) {
+    let shareMsg;
+    if (reachedMonth === 0) shareMsg = '¡Ya puedo comprarme un piso! 🏠 Lo he calculado en calcuyo.com';
+    else if (reachedMonth === -1) shareMsg = 'Con mis datos no llego a comprarme un piso en 50 años 😅 Calculado en calcuyo.com';
+    else shareMsg = '🔑 Según calcuyo.com, podré comprarme un piso en ' + timeEl.textContent;
+    shareBtn.setAttribute('data-share', shareMsg);
   }
 
   // Situación en el momento de la compra

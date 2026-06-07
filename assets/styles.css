@@ -184,6 +184,42 @@ input.has-suffix { padding-right: 32px; }
 .chart-box { margin-top: 8px; position: relative; height: 280px; }
 .note { font-size: 0.78rem; color: var(--text-dim); margin-top: 14px; line-height: 1.6; }
 
+/* ====== Botón compartir resultados ====== */
+.share-wrap { position: relative; display: inline-block; margin-left: auto; }
+.share-btn {
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+  padding: 7px 12px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s;
+}
+.share-btn:hover { background: var(--accent-hover); }
+.share-btn svg { width: 14px; height: 14px; }
+.share-popover {
+  display: none; position: absolute; right: 0; top: calc(100% + 8px);
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: var(--shadow-lg); padding: 6px; z-index: 70; min-width: 180px;
+}
+.share-popover.open { display: block; }
+.share-popover button {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px;
+  background: transparent; border: none; cursor: pointer; border-radius: 8px;
+  font-size: 0.88rem; color: var(--text); text-align: left;
+}
+.share-popover button:hover { background: var(--bg-soft); }
+.share-popover .ok { color: var(--green); font-size: 0.78rem; padding: 8px 12px; }
+/* La cabecera de la card que contiene el botón compartir necesita alinear a la derecha */
+.card h2.with-share { display: flex; align-items: center; }
+
+/* ====== Tarjetas de comparador (varias columnas lado a lado) ====== */
+.asset-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+@media (max-width: 820px) { .asset-cards { grid-template-columns: 1fr; } }
+.asset-card {
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px; box-shadow: var(--shadow);
+}
+.asset-card h3 { font-size: 0.95rem; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+td.best { color: var(--green); font-weight: 700; }
+
 /* ====== Tabla genérica (amortización, etc.) ====== */
 .table-wrap { overflow-x: auto; }
 table.data { width: 100%; border-collapse: collapse; font-size: 0.88rem; }

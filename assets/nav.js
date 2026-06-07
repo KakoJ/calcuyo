@@ -12,7 +12,8 @@
     { href: 'ahorro.html',                    label: 'Ahorro y jubilación' },
     { href: 'comprar-vs-alquilar.html',       label: 'Comprar o alquilar' },
     { href: 'sueldo-neto.html',               label: 'Sueldo neto' },
-    { href: 'cuando-comprar-piso.html',       label: '¿Cuándo un piso?' }
+    { href: 'cuando-comprar-piso.html',       label: '¿Cuándo un piso?' },
+    { href: 'comparador-hipotecas.html',      label: 'Comparador de hipotecas' }
   ];
 
   const container = document.getElementById('site-nav');

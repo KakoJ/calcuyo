@@ -99,7 +99,11 @@
 
       <!-- Resultados -->
       <div class="card">
-        <h2><span class="dot"></span>Resultados</h2>
+        <h2 class="with-share"><span class="dot"></span>Resultados
+          <span class="share-wrap">
+            <button id="shareBtn" class="share-btn" type="button" data-share="">↗ Compartir</button>
+          </span>
+        </h2>
         <div class="results">
           <div class="result-box positive">
             <div class="lbl">Necesitas ahorrar al mes</div>
@@ -280,6 +284,20 @@ function calcSavings() {
   document.getElementById('s_yearly').textContent      = euro(monthly * 12);
   document.getElementById('s_contributed').textContent = euro(totalContributed);
   document.getElementById('s_interest').textContent    = euro(totalInterest);
+
+  // Mensaje del botón compartir
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) {
+    let shareMsg;
+    if (savingsMode === 'income') {
+      shareMsg = '🎯 Para cobrar ' + euro(num('s_income')) + '/mes durante ' + Math.round(num('s_incomeYears')) + ' años necesito ahorrar ' + euro2(monthly) + ' al mes. Calculado en calcuyo.com';
+    } else if (monthly === 0) {
+      shareMsg = '🎯 Mis ahorros ya cubren mi objetivo. Calculado en calcuyo.com';
+    } else {
+      shareMsg = '🎯 Necesito ahorrar ' + euro2(monthly) + ' al mes durante ' + years + ' años para llegar a ' + euro(goal) + '. Calculado en calcuyo.com';
+    }
+    shareBtn.setAttribute('data-share', shareMsg);
+  }
 
   // Datos del gráfico (evolución año a año)
   const labels = ['Año 0'];
