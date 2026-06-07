@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto | Calcuyo</title>
+<meta name="description" content="¿Tienes alguna sugerencia o has detectado un error en alguna calculadora? Escríbenos.">
+<link rel="canonical" href="https://calcuyo.com/contacto.html">
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/nav.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="inner">
+      <a class="brand" href="index.html">
+        <span class="logo">€</span>
+        <span class="name">Calcuyo</span>
+      </a>
+      <nav class="topnav" id="site-nav"></nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-head">
+      <h1>Contacto</h1>
+      <p>¿Tienes una sugerencia, has detectado un error o quieres proponer una nueva calculadora? Escríbenos y te respondemos.</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- Información de contacto -->
+      <div class="card">
+        <h2><span class="dot"></span>¿De qué puedes escribirnos?</h2>
+        <p style="color:var(--text-dim);margin-bottom:12px;line-height:1.7">
+          Cualquier mensaje es bienvenido. Estos son los que más nos ayudan:
+        </p>
+        <ul style="color:var(--text-dim);list-style:none;padding:0;margin:0;line-height:1.7">
+          <li style="padding:8px 0;border-bottom:1px solid var(--border)"><strong style="color:var(--text)">💡 Sugerencias.</strong> ¿Echas en falta una calculadora? ¿Una funcionalidad?</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border)"><strong style="color:var(--text)">🐛 Errores.</strong> Si algún resultado no te cuadra o ves un fallo de formato.</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border)"><strong style="color:var(--text)">📊 Cifras desactualizadas.</strong> Avísanos si algún tramo de IRPF u otro dato ha cambiado.</li>
+          <li style="padding:8px 0"><strong style="color:var(--text)">🤝 Colaboraciones.</strong> Propuestas profesionales o de partnership.</li>
+        </ul>
+
+        <p class="note" style="margin-top:20px">
+          También puedes escribirnos directamente a
+          <a href="mailto:info@calcuyo.com" style="color:var(--accent);font-weight:600">info@calcuyo.com</a>.
+        </p>
+      </div>
+
+      <!-- Formulario -->
+      <div class="card">
+        <h2><span class="dot"></span>Envíanos un mensaje</h2>
+
+        <!--
+          Formulario procesado por Netlify Forms (no requiere backend).
+          - data-netlify="true" → Netlify detecta el form en el build.
+          - data-netlify-honeypot → campo trampa para bots, oculto al usuario.
+          - El campo oculto "form-name" es necesario para envíos vía JS o estáticos.
+        -->
+        <form name="contacto"
+              method="POST"
+              action="/gracias.html"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contacto">
+          <p style="display:none">
+            <label>No rellenes esto si eres humano: <input name="bot-field"></label>
+          </p>
+
+          <div class="field">
+            <label for="cf_name">Nombre</label>
+            <input type="text" id="cf_name" name="nombre" required>
+          </div>
+
+          <div class="field">
+            <label for="cf_email">Email</label>
+            <input type="email" id="cf_email" name="email" required>
+          </div>
+
+          <div class="field">
+            <label for="cf_subject">Asunto</label>
+            <select id="cf_subject" name="asunto">
+              <option value="Sugerencia">Sugerencia o nueva calculadora</option>
+              <option value="Error">Error o fallo</option>
+              <option value="Cifras">Cifras desactualizadas</option>
+              <option value="Colaboracion">Colaboración / partnership</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="cf_message">Mensaje</label>
+            <textarea id="cf_message" name="mensaje" required placeholder="Cuéntanos en qué podemos ayudarte..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Enviar mensaje</button>
+
+          <p class="note" style="margin-top:14px">
+            Al enviar este formulario aceptas que tu mensaje sea recibido por correo.
+            No usamos tus datos para nada más ni los compartimos con terceros.
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p class="disclaimer">
+      Calcuyo · Calculadoras financieras orientativas. <a href="contacto.html" style="color:var(--accent)">Contacto</a>.
+    </p>
+    <p>© 2026 · Calcuyo</p>
+  </footer>
+
+</body>
+</html>

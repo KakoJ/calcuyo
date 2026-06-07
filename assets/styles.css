@@ -156,12 +156,23 @@ body {
 .field { margin-bottom: 15px; }
 .field label { display: block; font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; }
 .input-wrap { position: relative; display: flex; align-items: center; }
-input[type="number"], input[type="text"], select {
+input[type="number"], input[type="text"], input[type="email"], select, textarea {
   width: 100%; padding: 11px 12px; background: var(--bg-input);
   border: 1px solid var(--border); border-radius: 9px; color: var(--text);
   font-size: 0.95rem; transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
 }
-input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(30,58,95,0.12); }
+textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(30,58,95,0.12); }
+
+/* Botón primario reutilizable */
+.btn-primary {
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+  padding: 12px 22px; border-radius: 9px; font-size: 0.95rem; font-weight: 600;
+  font-family: inherit; transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .suffix { position: absolute; right: 12px; color: var(--text-dim); font-size: 0.85rem; pointer-events: none; }
 input.has-suffix { padding-right: 32px; }
 /* En las filas de dos columnas, los inputs deben quedar siempre al mismo nivel,
