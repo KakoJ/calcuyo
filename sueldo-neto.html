@@ -43,42 +43,105 @@
 
       <!-- Formulario -->
       <div class="card">
-        <h2><span class="dot"></span>Tus datos</h2>
+        <h2><span class="dot"></span>Datos profesionales</h2>
 
-        <div class="field">
-          <label>Salario bruto anual</label>
-          <div class="input-wrap">
-            <input type="number" id="w_gross" class="has-suffix" value="30000" min="0" step="500">
-            <span class="suffix">€</span>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Número de pagas</label>
-          <select id="w_pagas">
-            <option value="14" selected>14 pagas</option>
-            <option value="12">12 pagas</option>
-          </select>
-        </div>
-
-        <h2 style="margin-top:18px"><span class="dot"></span>Parámetros editables</h2>
-        <p class="note" style="margin-top:0;margin-bottom:14px">Ajusta estos valores a las cifras oficiales vigentes y a tu situación.</p>
         <div class="row">
           <div class="field">
-            <label>Cotización Seguridad Social (trabajador)</label>
+            <label>Salario bruto anual</label>
             <div class="input-wrap">
-              <input type="number" id="w_ss" class="has-suffix" value="6.35" min="0" step="0.01">
-              <span class="suffix">%</span>
-            </div>
-          </div>
-          <div class="field">
-            <label>Mínimo personal exento</label>
-            <div class="input-wrap">
-              <input type="number" id="w_min" class="has-suffix" value="5550" min="0" step="100">
+              <input type="number" id="w_gross" class="has-suffix" value="30000" min="0" step="500">
               <span class="suffix">€</span>
             </div>
           </div>
+          <div class="field">
+            <label>Número de pagas</label>
+            <select id="w_pagas">
+              <option value="14" selected>14 pagas</option>
+              <option value="12">12 pagas</option>
+            </select>
+          </div>
         </div>
+
+        <h2 style="margin-top:18px"><span class="dot"></span>Datos personales y familiares</h2>
+        <p class="note" style="margin-top:0;margin-bottom:14px">Estos campos ajustan el mínimo personal y familiar aplicable.</p>
+
+        <div class="row">
+          <div class="field">
+            <label>Edad</label>
+            <div class="input-wrap">
+              <input type="number" id="w_age" class="has-suffix" value="35" min="16" max="99" step="1">
+              <span class="suffix">años</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Situación familiar</label>
+            <select id="w_family">
+              <option value="single" selected>Soltero / sin cónyuge a cargo</option>
+              <option value="married">Cónyuge sin ingresos a cargo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Discapacidad</label>
+          <select id="w_disability">
+            <option value="0" selected>Sin discapacidad</option>
+            <option value="33">Entre 33% y 65%</option>
+            <option value="65">65% o superior</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Hijos a cargo (menores de 25)</label>
+            <div class="input-wrap">
+              <input type="number" id="w_kids" class="has-suffix" value="0" min="0" max="10" step="1">
+              <span class="suffix"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label>De ellos, menores de 3 años</label>
+            <div class="input-wrap">
+              <input type="number" id="w_kidsYoung" class="has-suffix" value="0" min="0" max="10" step="1">
+              <span class="suffix"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Ascendientes mayores de 65 a cargo</label>
+          <div class="input-wrap">
+            <input type="number" id="w_elders" class="has-suffix" value="0" min="0" max="6" step="1">
+            <span class="suffix"></span>
+          </div>
+        </div>
+
+        <div class="field" style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <input type="checkbox" id="w_moving" style="width:auto;margin:0">
+          <label for="w_moving" style="margin:0;cursor:pointer">Movilidad geográfica (cambio de municipio por empleo)</label>
+        </div>
+
+        <!-- Avanzado: parámetros editables -->
+        <details style="margin-top:14px">
+          <summary style="cursor:pointer;font-size:0.85rem;color:var(--text-dim);font-weight:600;padding:6px 0">⚙️ Parámetros avanzados (opcional)</summary>
+          <div class="row" style="margin-top:10px">
+            <div class="field">
+              <label>Cotización Seguridad Social</label>
+              <div class="input-wrap">
+                <input type="number" id="w_ss" class="has-suffix" value="6.35" min="0" step="0.01">
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Mínimo personal y familiar (forzar)</label>
+              <div class="input-wrap">
+                <input type="number" id="w_minOverride" class="has-suffix" value="" min="0" step="100" placeholder="auto">
+                <span class="suffix">€</span>
+              </div>
+            </div>
+          </div>
+          <p class="note" style="margin-top:8px">Si dejas el mínimo en blanco, se calcula automáticamente a partir de los datos personales. Si conoces tu cifra exacta, escríbela aquí para forzarla.</p>
+        </details>
       </div>
 
       <!-- Resultados -->
@@ -109,6 +172,10 @@
             <div class="lbl">Retención total sobre bruto</div>
             <div class="val" id="w_totalRate">—</div>
           </div>
+          <div class="result-box">
+            <div class="lbl">Mínimo personal y familiar aplicado</div>
+            <div class="val" id="w_minApplied">—</div>
+          </div>
         </div>
         <div class="chart-box"><canvas id="salaryChart"></canvas></div>
       </div>
@@ -122,22 +189,48 @@
         <h2>¿Cómo funciona esta calculadora?</h2>
         <p>
           Esta herramienta estima tu <strong>sueldo neto</strong> (lo que cobras "en mano") partiendo de tu
-          <strong>salario bruto anual</strong>. Para ello descuenta dos conceptos principales: la
-          <strong>cotización a la Seguridad Social</strong> a cargo del trabajador y una aproximación de la
+          <strong>salario bruto anual</strong> y tu <strong>situación personal y familiar</strong>. Descuenta dos
+          conceptos principales: la <strong>cotización a la Seguridad Social</strong> a cargo del trabajador y la
           <strong>retención de IRPF</strong>.
         </p>
         <p>El cálculo sigue estos pasos:</p>
         <ul>
           <li>Resta la cotización a la Seguridad Social (un porcentaje del bruto).</li>
-          <li>Resta un mínimo personal exento para obtener la base sobre la que se aplica el IRPF.</li>
-          <li>Aplica una <strong>escala progresiva por tramos</strong>: cada porción de tu salario tributa a un tipo distinto.</li>
+          <li>Aplica reducciones a la base si corresponden (cónyuge sin ingresos a cargo, movilidad geográfica).</li>
+          <li>Calcula el <strong>mínimo personal y familiar</strong> a partir de la edad, hijos, ascendientes y discapacidad.</li>
+          <li>Aplica la <strong>escala progresiva</strong> a la base y al mínimo: la cuota de IRPF es la diferencia entre ambas (cuota íntegra menos cuota por mínimos).</li>
           <li>Lo que queda es tu sueldo neto, que se reparte entre el número de pagas que elijas.</li>
         </ul>
         <p>
-          Es un modelo <strong>simplificado y orientativo</strong>. La retención real de tu nómina depende de muchos
-          factores personales (hijos, situación familiar, comunidad autónoma, antigüedad del contrato, etc.) que aquí
-          no se contemplan en detalle.
+          Es un modelo <strong>simplificado y orientativo</strong>. La retención real de tu nómina depende también de la
+          comunidad autónoma (que ajusta la parte autonómica del IRPF), el tipo de contrato y otras circunstancias que
+          aquí no se contemplan en detalle.
         </p>
+      </div>
+
+      <div class="card">
+        <h2>Cifras de referencia usadas</h2>
+        <p>Estos son los importes de referencia precargados para calcular el mínimo personal y familiar. <strong>Verifica los vigentes en la Agencia Tributaria</strong>:</p>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>Concepto</th><th>Importe</th></tr></thead>
+            <tbody>
+              <tr><td>Mínimo personal base</td><td>5.550 €</td></tr>
+              <tr><td>Suplemento mayor de 65</td><td>+1.150 €</td></tr>
+              <tr><td>Suplemento adicional mayor de 75</td><td>+1.400 €</td></tr>
+              <tr><td>1er hijo</td><td>2.400 €</td></tr>
+              <tr><td>2º hijo</td><td>2.700 €</td></tr>
+              <tr><td>3er hijo</td><td>4.000 €</td></tr>
+              <tr><td>4º hijo y siguientes</td><td>4.500 €</td></tr>
+              <tr><td>Por cada hijo menor de 3 años</td><td>+2.800 €</td></tr>
+              <tr><td>Ascendiente mayor de 65 a cargo</td><td>1.150 €</td></tr>
+              <tr><td>Discapacidad 33-65%</td><td>3.000 €</td></tr>
+              <tr><td>Discapacidad ≥65%</td><td>9.000 €</td></tr>
+              <tr><td>Cónyuge sin ingresos a cargo</td><td>3.400 €</td></tr>
+              <tr><td>Movilidad geográfica</td><td>2.000 €</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="card">
@@ -182,7 +275,11 @@
         </details>
         <details>
           <summary>¿Puedo ajustar el cálculo a mi caso?</summary>
-          <p>Sí: puedes editar el porcentaje de Seguridad Social y el mínimo personal exento. Para un cálculo exacto, consulta la web de la Agencia Tributaria o a un asesor fiscal.</p>
+          <p>Sí: con los datos personales (edad, hijos, ascendientes, discapacidad, situación familiar, movilidad geográfica) la calculadora ajusta automáticamente el mínimo personal y familiar. Además, en "Parámetros avanzados" puedes editar el porcentaje de Seguridad Social y forzar manualmente el mínimo si conoces tu cifra exacta.</p>
+        </details>
+        <details>
+          <summary>¿Qué es la movilidad geográfica?</summary>
+          <p>Es una reducción aplicable durante el año del cambio y el siguiente cuando un desempleado inscrito acepta un empleo que implica trasladar su residencia a otro municipio. Aquí se aplica de forma simplificada como una reducción de 2.000 € a la base.</p>
         </details>
         <details>
           <summary>¿Sirve para autónomos?</summary>
@@ -205,22 +302,39 @@
 
 <script src="assets/utils.js"></script>
 <script>
-/* ===== Lógica de sueldo neto (modelo simplificado y orientativo) ===== */
+/* ===== Lógica de sueldo neto (modelo simplificado y orientativo) =====
+   Aplica la fórmula correcta:  IRPF = cuota_íntegra(base) − cuota_íntegra(mínimo).
+   El mínimo familiar es la suma del mínimo personal + ajustes por edad,
+   hijos, ascendientes y discapacidad, según cifras de referencia que pueden
+   variar año a año (verificar AEAT). */
 let salaryChart;
 
-// Tramos de IRPF de referencia (suma estatal + autonómica aproximada).
-// VALORES ORIENTATIVOS: deben verificarse con las cifras oficiales vigentes.
+// Tramos de IRPF de referencia (estatal + autonómico aproximado).
 const IRPF_BRACKETS = [
-  { limit: 12450,  rate: 0.19 },
-  { limit: 20200,  rate: 0.24 },
-  { limit: 35200,  rate: 0.30 },
-  { limit: 60000,  rate: 0.37 },
-  { limit: 300000, rate: 0.45 },
+  { limit: 12450,    rate: 0.19 },
+  { limit: 20200,    rate: 0.24 },
+  { limit: 35200,    rate: 0.30 },
+  { limit: 60000,    rate: 0.37 },
+  { limit: 300000,   rate: 0.45 },
   { limit: Infinity, rate: 0.47 }
 ];
 
-// IRPF progresivo: cada tramo tributa a su tipo
-function calcIRPF(base) {
+// Cifras de referencia para mínimos personales y familiares (verificar vigentes en AEAT).
+const REF = {
+  personal:    5550,
+  over65:      1150,
+  over75Extra: 1400,
+  kids:        [2400, 2700, 4000, 4500],   // 1º, 2º, 3º, 4º y siguientes
+  kidUnder3:   2800,
+  elderOver65: 1150,
+  disab33:     3000,
+  disab65:     9000,
+  spouse:      3400,    // reducción si cónyuge sin ingresos a cargo
+  moving:      2000     // reducción por movilidad geográfica
+};
+
+// Aplica la escala progresiva
+function applyScale(base) {
   if (base <= 0) return 0;
   let tax = 0, prev = 0;
   for (const b of IRPF_BRACKETS) {
@@ -232,31 +346,76 @@ function calcIRPF(base) {
   return tax;
 }
 
+// Calcula el mínimo personal y familiar a partir de los datos del usuario
+function computeMinimum() {
+  const age      = num('w_age');
+  const disab    = parseInt(document.getElementById('w_disability').value, 10);
+  const kids     = Math.max(0, Math.round(num('w_kids')));
+  const kidsY    = Math.min(kids, Math.max(0, Math.round(num('w_kidsYoung'))));
+  const elders   = Math.max(0, Math.round(num('w_elders')));
+
+  let min = REF.personal;
+  if (age >= 65) min += REF.over65;
+  if (age >= 75) min += REF.over75Extra;
+
+  // Mínimo por descendientes (escalado)
+  for (let i = 0; i < kids; i++) {
+    min += REF.kids[Math.min(i, REF.kids.length - 1)];
+  }
+  // Suplemento por hijos < 3 años
+  min += kidsY * REF.kidUnder3;
+
+  // Ascendientes >65 a cargo
+  min += elders * REF.elderOver65;
+
+  // Discapacidad del contribuyente
+  if (disab === 33) min += REF.disab33;
+  if (disab === 65) min += REF.disab65;
+
+  return min;
+}
+
 function calcSalary() {
-  const gross = num('w_gross');
-  const pagas = parseInt(document.getElementById('w_pagas').value, 10);
+  const gross  = num('w_gross');
+  const pagas  = parseInt(document.getElementById('w_pagas').value, 10);
   const ssRate = num('w_ss') / 100;
-  const personalMin = num('w_min');
+  const family = document.getElementById('w_family').value;
+  const moving = document.getElementById('w_moving').checked;
+  const minOverride = parseFloat(document.getElementById('w_minOverride').value);
 
   // Seguridad Social a cargo del trabajador
   const ss = gross * ssRate;
 
-  // Base para el IRPF (tras Seguridad Social y mínimo personal)
-  const taxableBase = Math.max(0, gross - ss - personalMin);
-  const irpf = calcIRPF(taxableBase);
+  // Mínimo personal y familiar (calculado o forzado)
+  const minimumAuto = computeMinimum();
+  const minimum = isFinite(minOverride) && minOverride > 0 ? minOverride : minimumAuto;
+
+  // Reducciones que disminuyen la base liquidable (no el mínimo)
+  let reductions = 0;
+  if (family === 'married') reductions += REF.spouse;
+  if (moving) reductions += REF.moving;
+
+  // Base liquidable general
+  const baseLiquidable = Math.max(0, gross - ss - reductions);
+
+  // Fórmula correcta: cuota íntegra − cuota por mínimos
+  const cuotaBase = applyScale(baseLiquidable);
+  const cuotaMin  = applyScale(minimum);
+  const irpf = Math.max(0, cuotaBase - cuotaMin);
 
   const netYear = gross - ss - irpf;
   const netPaga = pagas > 0 ? netYear / pagas : 0;
-  const irpfRate = gross > 0 ? (irpf / gross) * 100 : 0;
+  const irpfRate  = gross > 0 ? (irpf / gross) * 100 : 0;
   const totalRate = gross > 0 ? ((ss + irpf) / gross) * 100 : 0;
 
   // Volcado
-  document.getElementById('w_netYear').textContent   = euro(netYear);
-  document.getElementById('w_netPaga').textContent   = euro2(netPaga);
-  document.getElementById('w_irpf').textContent      = euro(irpf);
-  document.getElementById('w_ssAmount').textContent  = euro(ss);
-  document.getElementById('w_irpfRate').textContent  = pct(irpfRate);
-  document.getElementById('w_totalRate').textContent = pct(totalRate);
+  document.getElementById('w_netYear').textContent    = euro(netYear);
+  document.getElementById('w_netPaga').textContent    = euro2(netPaga);
+  document.getElementById('w_irpf').textContent       = euro(irpf);
+  document.getElementById('w_ssAmount').textContent   = euro(ss);
+  document.getElementById('w_irpfRate').textContent   = pct(irpfRate);
+  document.getElementById('w_totalRate').textContent  = pct(totalRate);
+  document.getElementById('w_minApplied').textContent = euro(minimum);
 
   // Gráfico de reparto (donut): neto / IRPF / Seguridad Social
   const data = [Math.max(0, netYear), irpf, ss];
@@ -284,9 +443,15 @@ function calcSalary() {
   }
 }
 
-['w_gross','w_pagas','w_ss','w_min'].forEach(id =>
-  document.getElementById(id).addEventListener('input', calcSalary));
-document.getElementById('w_pagas').addEventListener('change', calcSalary);
+// Todos los campos que disparan recálculo en tiempo real
+['w_gross','w_pagas','w_ss','w_minOverride',
+ 'w_age','w_family','w_disability','w_kids','w_kidsYoung','w_elders','w_moving'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const ev = (el.tagName === 'SELECT' || el.type === 'checkbox') ? 'change' : 'input';
+  el.addEventListener(ev, calcSalary);
+  if (ev === 'change') el.addEventListener('input', calcSalary);
+});
 calcSalary();
 </script>
 </body>

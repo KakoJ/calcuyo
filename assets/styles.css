@@ -164,8 +164,11 @@ input[type="number"], input[type="text"], select {
 input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(30,58,95,0.12); }
 .suffix { position: absolute; right: 12px; color: var(--text-dim); font-size: 0.85rem; pointer-events: none; }
 input.has-suffix { padding-right: 32px; }
-.row { display: flex; gap: 12px; }
-.row .field { flex: 1; }
+/* En las filas de dos columnas, los inputs deben quedar siempre al mismo nivel,
+   aunque un label ocupe más líneas que el otro. */
+.row { display: flex; gap: 12px; align-items: stretch; }
+.row .field { flex: 1; display: flex; flex-direction: column; }
+.row .field .input-wrap { margin-top: auto; }
 
 .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 6px; }
 .seg button { background: var(--bg-panel); border: none; color: var(--text-dim); padding: 5px 12px; font-size: 0.78rem; cursor: pointer; font-weight: 600; }
