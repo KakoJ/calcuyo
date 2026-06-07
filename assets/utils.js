@@ -48,7 +48,12 @@ function initShareButton() {
   if (!btn) return;
   const url = location.href.split('?')[0].split('#')[0];
 
-  // Popover de fallback (escritorio / navegadores sin Web Share API)
+  // El menú nativo (Web Share API) solo se usa en dispositivos táctiles:
+  // en desktop muchas veces falla silenciosamente o abre un panel poco útil,
+  // así que ahí mostramos siempre nuestro popover con X / WhatsApp / Copiar.
+  const isTouch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  // Popover (escritorio / siempre disponible como fallback)
   const pop = document.createElement('div');
   pop.className = 'share-popover';
   pop.innerHTML =
@@ -60,8 +65,7 @@ function initShareButton() {
   btn.addEventListener('click', async (e) => {
     e.stopPropagation();
     const text = btn.getAttribute('data-share') || 'Mira esta calculadora financiera';
-    // Móvil moderno: abre el menú nativo de compartir del sistema
-    if (navigator.share) {
+    if (isTouch && navigator.share) {
       try { await navigator.share({ text, url }); } catch (_) { /* el usuario canceló */ }
     } else {
       pop.classList.toggle('open');

@@ -186,28 +186,29 @@ input.has-suffix { padding-right: 32px; }
 
 /* ====== Botón compartir resultados ====== */
 .share-wrap { position: relative; display: inline-block; margin-left: auto; }
+/* Reseteamos los heredados del h2 (uppercase + letter-spacing) para que el botón se lea bien */
 .share-btn {
   background: var(--accent); color: #fff; border: none; cursor: pointer;
-  padding: 7px 12px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
   display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s;
+  text-transform: none; letter-spacing: 0; line-height: 1; font-family: inherit;
 }
 .share-btn:hover { background: var(--accent-hover); }
-.share-btn svg { width: 14px; height: 14px; }
 .share-popover {
   display: none; position: absolute; right: 0; top: calc(100% + 8px);
   background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px;
-  box-shadow: var(--shadow-lg); padding: 6px; z-index: 70; min-width: 180px;
+  box-shadow: var(--shadow-lg); padding: 6px; z-index: 70; min-width: 200px;
 }
 .share-popover.open { display: block; }
 .share-popover button {
-  display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px;
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px;
   background: transparent; border: none; cursor: pointer; border-radius: 8px;
-  font-size: 0.88rem; color: var(--text); text-align: left;
+  font-size: 0.9rem; color: var(--text); text-align: left;
+  text-transform: none; letter-spacing: 0; font-family: inherit; font-weight: 500;
 }
 .share-popover button:hover { background: var(--bg-soft); }
-.share-popover .ok { color: var(--green); font-size: 0.78rem; padding: 8px 12px; }
-/* La cabecera de la card que contiene el botón compartir necesita alinear a la derecha */
-.card h2.with-share { display: flex; align-items: center; }
+/* La cabecera del card que contiene el botón compartir necesita espacio para el botón a la derecha */
+.card h2.with-share { display: flex; align-items: center; gap: 8px; }
 
 /* ====== Tarjetas de comparador (varias columnas lado a lado) ====== */
 .asset-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
